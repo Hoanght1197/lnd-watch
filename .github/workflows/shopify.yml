@@ -1,0 +1,57 @@
+# Thu dữ liệu Shopify đối thủ mỗi ngày 23:00 UTC (= 6:00 sáng giờ VN) rồi commit data/.
+# Etsy + FB ads chạy ở máy anh Hoàng (collect/run_local.ps1) vì Etsy/FB chặn IP cloud.
+name: shopify-daily
+
+on:
+  schedule:
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cài thư viện
+        run: pip install -r collect/requirements.txt
+
+      - name: Thu Shopify (watch.txt)
+        # ngày snapshot theo giờ VN để khớp với Etsy/ads chạy ở máy local lúc 6:05 sáng
+        run: python collect/run_shopify.py --date "$(TZ=Asia/Ho_Chi_Minh date +%F)"
+
+      - name: Tổng hợp + kiểm schema
+        run: |
+          python collect/build_summary.py
+          python collect/check_schema.py
+
+      - name: Commit + push data/
+        run: |
+          git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com add data
+          if git diff --cached --quiet; then
+            echo "Không có thay đổi"
+            exit 0
+          fi
+          DATE=$(TZ=Asia/Ho_Chi_Minh date +%F)
+          git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com commit -m "data: $DATE shopify"
+          # máy local có thể vừa push Etsy/ads → rebase (giữ bản của mình khi file tổng hợp xung đột) rồi build lại
+          git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com pull --rebase -X theirs
+          python collect/build_summary.py
+          python collect/check_schema.py
+          git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com add data
+          if ! git diff --cached --quiet; then
+            git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com commit -m "data: $DATE shopify (build lại sau pull)"
+          fi
+          git push
