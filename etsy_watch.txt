@@ -1,0 +1,5 @@
+# mỗi dòng 1 tên shop Etsy
+StayNaturalStore
+grossbale
+GamersTreasuresCo
+ModWoodCo

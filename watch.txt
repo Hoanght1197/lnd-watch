@@ -1,0 +1,7 @@
+# mỗi dòng 1 domain Shopify (không https://, không www.)
+wondroot.com
+woodemon.com
+carpenter-farmhouse.com
+3dwoodworker.com
+craftmkr.com
+modocreative.com

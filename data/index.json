@@ -1,0 +1,86 @@
+{
+ "updated_at": "2026-10-14T08:15:24Z",
+ "shopify": [
+  {
+   "domain": "3dwoodworker.com",
+   "name": "3D Woodworker",
+   "first_seen": "2026-10-14",
+   "last_ok": "2026-10-14",
+   "n_products": 225,
+   "n_niche": 107,
+   "n_new_7d": 8
+  },
+  {
+   "domain": "carpenter-farmhouse.com",
+   "name": "Carpenter Farmhouse",
+   "first_seen": "2026-10-14",
+   "last_ok": "2026-10-14",
+   "n_products": 396,
+   "n_niche": 322,
+   "n_new_7d": 1
+  },
+  {
+   "domain": "craftmkr.com",
+   "name": "Craftmkr",
+   "first_seen": "2026-10-14",
+   "last_ok": "2026-10-14",
+   "n_products": 215,
+   "n_niche": 75,
+   "n_new_7d": 3
+  },
+  {
+   "domain": "modocreative.com",
+   "name": "Modo Creative",
+   "first_seen": "2026-10-14",
+   "last_ok": "2026-10-14",
+   "n_products": 971,
+   "n_niche": 144,
+   "n_new_7d": 2
+  },
+  {
+   "domain": "wondroot.com",
+   "name": "Wondroot",
+   "first_seen": "2026-10-14",
+   "last_ok": "2026-10-14",
+   "n_products": 395,
+   "n_niche": 395,
+   "n_new_7d": 49
+  },
+  {
+   "domain": "woodemon.com",
+   "name": "Woodemon",
+   "first_seen": "2026-10-14",
+   "last_ok": "2026-10-14",
+   "n_products": 912,
+   "n_niche": 171,
+   "n_new_7d": 1
+  }
+ ],
+ "etsy": [
+  {
+   "shop": "grossbale",
+   "last_ok": "2026-10-14",
+   "sales": 4963,
+   "reviews": 632,
+   "sales_7d": null
+  },
+  {
+   "shop": "StayNaturalStore",
+   "last_ok": "2026-10-14",
+   "sales": 3479,
+   "reviews": 516,
+   "sales_7d": null
+  }
+ ],
+ "ads": [
+  {
+   "key": "wondroot.com",
+   "last_ok": "2026-10-14",
+   "n_active": 185,
+   "max_days_running": 34
+  }
+ ],
+ "dates": [
+  "2026-10-14"
+ ]
+}
