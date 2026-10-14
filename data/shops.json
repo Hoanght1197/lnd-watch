@@ -1,0 +1,1572 @@
+{
+ "updated_at": "2026-10-14T08:47:33Z",
+ "rule": "Shopify: sp cùng ngách ≥ 20 hoặc ads ≥ 1 · Etsy: top 15 theo điểm · + shops_extra.txt",
+ "shops": [
+  {
+   "id": "3dwoodworker.com",
+   "platform": "shopify",
+   "domain": "3dwoodworker.com",
+   "name": "3dwoodworker.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 107 sp cùng ngách / 225 sp · 1 ads · giá 79.0–159.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 107,
+    "tong_san_pham": 225,
+    "gia_min": 79.0,
+    "gia_max": 159.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "adorenstudio.com",
+   "platform": "shopify",
+   "domain": "adorenstudio.com",
+   "name": "adorenstudio.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 169 sp cùng ngách / 256 sp · 0 ads · giá 5.0–399.0",
+   "keywords": [
+    "layered wood name sign",
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 169,
+    "tong_san_pham": 256,
+    "gia_min": 5.0,
+    "gia_max": 399.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "aydansuniquefinds.com",
+   "platform": "shopify",
+   "domain": "aydansuniquefinds.com",
+   "name": "aydansuniquefinds.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 61 sp cùng ngách / 102 sp · 0 ads · giá 49.9–249.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 61,
+    "tong_san_pham": 102,
+    "gia_min": 49.9,
+    "gia_max": 249.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "beamyourbrand.com",
+   "platform": "shopify",
+   "domain": "beamyourbrand.com",
+   "name": "beamyourbrand.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 25 sp cùng ngách / 92 sp · 0 ads · giá 27.0–489.0",
+   "keywords": [
+    "layered wood name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 25,
+    "tong_san_pham": 92,
+    "gia_min": 27.0,
+    "gia_max": 489.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "benchmarkcustomsigns.com",
+   "platform": "shopify",
+   "domain": "benchmarkcustomsigns.com",
+   "name": "benchmarkcustomsigns.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 171 sp cùng ngách / 347 sp · 0 ads · giá 49.0–163.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 171,
+    "tong_san_pham": 347,
+    "gia_min": 49.0,
+    "gia_max": 163.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "cadenlane.com",
+   "platform": "shopify",
+   "domain": "cadenlane.com",
+   "name": "cadenlane.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "discover",
+    "google",
+    "shopapp",
+    "tay"
+   ],
+   "note": "discover: 43 sp cùng ngách / 1246 sp · 0 ads · giá 19.0–150.0",
+   "keywords": [
+    "layered wood name sign",
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 43,
+    "tong_san_pham": 1246,
+    "gia_min": 19.0,
+    "gia_max": 150.0
+   },
+   "active": false,
+   "added_on": "2026-10-14",
+   "note_tay": "shop quần áo em bé, chỉ 43 sp ngách / 1246 sp (bỏ từ 14/10)"
+  },
+  {
+   "id": "carpenter-farmhouse.com",
+   "platform": "shopify",
+   "domain": "carpenter-farmhouse.com",
+   "name": "carpenter-farmhouse.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "google",
+    "shopapp",
+    "discover"
+   ],
+   "note": "discover: 322 sp cùng ngách / 396 sp · 0 ads · giá 7.0–250.0",
+   "keywords": [
+    "layered wood name sign",
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 322,
+    "tong_san_pham": 396,
+    "gia_min": 7.0,
+    "gia_max": 250.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "craftmkr.com",
+   "platform": "shopify",
+   "domain": "craftmkr.com",
+   "name": "craftmkr.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 75 sp cùng ngách / 215 sp · 2 ads · giá 16.0–296.0",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 2,
+    "san_pham_cung_nganh": 75,
+    "tong_san_pham": 215,
+    "gia_min": 16.0,
+    "gia_max": 296.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "craftmysign.com",
+   "platform": "shopify",
+   "domain": "craftmysign.com",
+   "name": "craftmysign.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "shopapp",
+    "discover"
+   ],
+   "note": "discover: 38 sp cùng ngách / 205 sp · 0 ads · giá 14.99–257.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 38,
+    "tong_san_pham": 205,
+    "gia_min": 14.99,
+    "gia_max": 257.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "crawoo.com",
+   "platform": "shopify",
+   "domain": "crawoo.com",
+   "name": "crawoo.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 120 sp cùng ngách / 175 sp · 0 ads · giá 1.98–541.7",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 120,
+    "tong_san_pham": 175,
+    "gia_min": 1.98,
+    "gia_max": 541.7
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "detailsandswirls.com",
+   "platform": "shopify",
+   "domain": "detailsandswirls.com",
+   "name": "detailsandswirls.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "shopapp",
+    "discover"
+   ],
+   "note": "discover: 38 sp cùng ngách / 517 sp · 0 ads · giá 28.0–399.0",
+   "keywords": [
+    "layered wood name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 38,
+    "tong_san_pham": 517,
+    "gia_min": 28.0,
+    "gia_max": 399.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "doyobest.com",
+   "platform": "shopify",
+   "domain": "doyobest.com",
+   "name": "doyobest.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 149 sp cùng ngách / 2500 sp · 2 ads · giá 19.99–149.99",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 2,
+    "san_pham_cung_nganh": 149,
+    "tong_san_pham": 2500,
+    "gia_min": 19.99,
+    "gia_max": 149.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "emmafy.com",
+   "platform": "shopify",
+   "domain": "emmafy.com",
+   "name": "emmafy.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 0 sp cùng ngách / 176 sp · 9 ads · giá None–None",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 9,
+    "san_pham_cung_nganh": 0,
+    "tong_san_pham": 176,
+    "gia_min": null,
+    "gia_max": null
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "empoweringdecor.com",
+   "platform": "shopify",
+   "domain": "empoweringdecor.com",
+   "name": "empoweringdecor.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 325 sp cùng ngách / 693 sp · 0 ads · giá 9.0–609.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 325,
+    "tong_san_pham": 693,
+    "gia_min": 9.0,
+    "gia_max": 609.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "faithcorner.co",
+   "platform": "shopify",
+   "domain": "faithcorner.co",
+   "name": "faithcorner.co",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 67 sp cùng ngách / 2500 sp · 1 ads · giá 12.95–55.95",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 67,
+    "tong_san_pham": 2500,
+    "gia_min": 12.95,
+    "gia_max": 55.95
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "harpandtimbrel.com",
+   "platform": "shopify",
+   "domain": "harpandtimbrel.com",
+   "name": "harpandtimbrel.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 26 sp cùng ngách / 88 sp · 0 ads · giá 10.99–164.99",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 26,
+    "tong_san_pham": 88,
+    "gia_min": 10.99,
+    "gia_max": 164.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "hickoryhollowdesigns.com",
+   "platform": "shopify",
+   "domain": "hickoryhollowdesigns.com",
+   "name": "hickoryhollowdesigns.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 112 sp cùng ngách / 1780 sp · 0 ads · giá 15.0–167.6",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 112,
+    "tong_san_pham": 1780,
+    "gia_min": 15.0,
+    "gia_max": 167.6
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "icustomlabel.com",
+   "platform": "shopify",
+   "domain": "icustomlabel.com",
+   "name": "icustomlabel.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 148 sp cùng ngách / 2500 sp · 0 ads · giá 20.0–83.0",
+   "keywords": [
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 148,
+    "tong_san_pham": 2500,
+    "gia_min": 20.0,
+    "gia_max": 83.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "instgifts.com",
+   "platform": "shopify",
+   "domain": "instgifts.com",
+   "name": "instgifts.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 85 sp cùng ngách / 395 sp · 0 ads · giá 17.0–89.9",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 85,
+    "tong_san_pham": 395,
+    "gia_min": 17.0,
+    "gia_max": 89.9
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "jazz-inspirations.com",
+   "platform": "shopify",
+   "domain": "jazz-inspirations.com",
+   "name": "jazz-inspirations.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "shopapp",
+    "discover"
+   ],
+   "note": "discover: 30 sp cùng ngách / 49 sp · 0 ads · giá 25.0–149.0",
+   "keywords": [
+    "layered wood name sign",
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 30,
+    "tong_san_pham": 49,
+    "gia_min": 25.0,
+    "gia_max": 149.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "jesuspirit.com",
+   "platform": "shopify",
+   "domain": "jesuspirit.com",
+   "name": "jesuspirit.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 1 sp cùng ngách / 2500 sp · 1 ads · giá 17.95–19.95",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 1,
+    "tong_san_pham": 2500,
+    "gia_min": 17.95,
+    "gia_max": 19.95
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "johnsonlivings.com",
+   "platform": "shopify",
+   "domain": "johnsonlivings.com",
+   "name": "johnsonlivings.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 27 sp cùng ngách / 1965 sp · 0 ads · giá 8.0–450.0",
+   "keywords": [
+    "layered wood name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 27,
+    "tong_san_pham": 1965,
+    "gia_min": 8.0,
+    "gia_max": 450.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "kalotoys.com",
+   "platform": "shopify",
+   "domain": "kalotoys.com",
+   "name": "kalotoys.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 51 sp cùng ngách / 255 sp · 0 ads · giá 7.99–69.99",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 51,
+    "tong_san_pham": 255,
+    "gia_min": 7.99,
+    "gia_max": 69.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "laserwoodworker.com",
+   "platform": "shopify",
+   "domain": "laserwoodworker.com",
+   "name": "laserwoodworker.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 21 sp cùng ngách / 89 sp · 1 ads · giá 69.0–139.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 21,
+    "tong_san_pham": 89,
+    "gia_min": 69.0,
+    "gia_max": 139.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "lemap.co",
+   "platform": "shopify",
+   "domain": "lemap.co",
+   "name": "lemap.co",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 0 sp cùng ngách / 99 sp · 1 ads · giá None–None",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 0,
+    "tong_san_pham": 99,
+    "gia_min": null,
+    "gia_max": null
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "lindenfields.com",
+   "platform": "shopify",
+   "domain": "lindenfields.com",
+   "name": "lindenfields.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "google",
+    "discover"
+   ],
+   "note": "discover: 73 sp cùng ngách / 272 sp · 0 ads · giá 25.0–199.95",
+   "keywords": [
+    "layered wood name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 73,
+    "tong_san_pham": 272,
+    "gia_min": 25.0,
+    "gia_max": 199.95
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "lulubabe.com",
+   "platform": "shopify",
+   "domain": "lulubabe.com",
+   "name": "lulubabe.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 41 sp cùng ngách / 374 sp · 0 ads · giá 34.95–199.95",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 41,
+    "tong_san_pham": 374,
+    "gia_min": 34.95,
+    "gia_max": 199.95
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "memoriesmade.ca",
+   "platform": "shopify",
+   "domain": "memoriesmade.ca",
+   "name": "memoriesmade.ca",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "shopapp",
+    "discover"
+   ],
+   "note": "discover: 44 sp cùng ngách / 394 sp · 0 ads · giá 3.0–160.0",
+   "keywords": [
+    "layered wood name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 44,
+    "tong_san_pham": 394,
+    "gia_min": 3.0,
+    "gia_max": 160.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "modocreative.com",
+   "platform": "shopify",
+   "domain": "modocreative.com",
+   "name": "modocreative.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "shopapp",
+    "discover"
+   ],
+   "note": "discover: 144 sp cùng ngách / 971 sp · 0 ads · giá 3.0–275.0",
+   "keywords": [
+    "layered wood name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 144,
+    "tong_san_pham": 971,
+    "gia_min": 3.0,
+    "gia_max": 275.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "namesigns.com",
+   "platform": "shopify",
+   "domain": "namesigns.com",
+   "name": "namesigns.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "google",
+    "discover"
+   ],
+   "note": "discover: 700 sp cùng ngách / 2500 sp · 0 ads · giá 1.0–4988.9",
+   "keywords": [
+    "layered wood name sign",
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 700,
+    "tong_san_pham": 2500,
+    "gia_min": 1.0,
+    "gia_max": 4988.9
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "ohcgifts.com",
+   "platform": "shopify",
+   "domain": "ohcgifts.com",
+   "name": "ohcgifts.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 106 sp cùng ngách / 415 sp · 0 ads · giá 6.0–195.0",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 106,
+    "tong_san_pham": 415,
+    "gia_min": 6.0,
+    "gia_max": 195.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "prints10.com",
+   "platform": "shopify",
+   "domain": "prints10.com",
+   "name": "prints10.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 204 sp cùng ngách / 2500 sp · 1 ads · giá 17.99–159.99",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 204,
+    "tong_san_pham": 2500,
+    "gia_min": 17.99,
+    "gia_max": 159.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "sawoodcrafting.com",
+   "platform": "shopify",
+   "domain": "sawoodcrafting.com",
+   "name": "sawoodcrafting.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 94 sp cùng ngách / 96 sp · 0 ads · giá 49.95–349.95",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 94,
+    "tong_san_pham": 96,
+    "gia_min": 49.95,
+    "gia_max": 349.95
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "scriptandgrain.com",
+   "platform": "shopify",
+   "domain": "scriptandgrain.com",
+   "name": "scriptandgrain.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 32 sp cùng ngách / 507 sp · 0 ads · giá 9.99–324.99",
+   "keywords": [
+    "layered wood name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 32,
+    "tong_san_pham": 507,
+    "gia_min": 9.99,
+    "gia_max": 324.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "shopmackenzieandco.com",
+   "platform": "shopify",
+   "domain": "shopmackenzieandco.com",
+   "name": "shopmackenzieandco.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 39 sp cùng ngách / 68 sp · 0 ads · giá 15.0–125.0",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 39,
+    "tong_san_pham": 68,
+    "gia_min": 15.0,
+    "gia_max": 125.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "sparkyswoodworks.com",
+   "platform": "shopify",
+   "domain": "sparkyswoodworks.com",
+   "name": "sparkyswoodworks.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 186 sp cùng ngách / 459 sp · 0 ads · giá 5.0–175.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 186,
+    "tong_san_pham": 459,
+    "gia_min": 5.0,
+    "gia_max": 175.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "sticksanddoodles.com",
+   "platform": "shopify",
+   "domain": "sticksanddoodles.com",
+   "name": "sticksanddoodles.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 40 sp cùng ngách / 466 sp · 0 ads · giá 45.0–2405.0",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 40,
+    "tong_san_pham": 466,
+    "gia_min": 45.0,
+    "gia_max": 2405.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "stickywallvinyl.com",
+   "platform": "shopify",
+   "domain": "stickywallvinyl.com",
+   "name": "stickywallvinyl.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 158 sp cùng ngách / 884 sp · 0 ads · giá 6.95–229.95",
+   "keywords": [
+    "layered wood name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 158,
+    "tong_san_pham": 884,
+    "gia_min": 6.95,
+    "gia_max": 229.95
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "storeofsigns.com",
+   "platform": "shopify",
+   "domain": "storeofsigns.com",
+   "name": "storeofsigns.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "google",
+    "discover"
+   ],
+   "note": "discover: 96 sp cùng ngách / 131 sp · 0 ads · giá 26.9–254.9",
+   "keywords": [
+    "layered wood name sign",
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 96,
+    "tong_san_pham": 131,
+    "gia_min": 26.9,
+    "gia_max": 254.9
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "sugarandmaple.com",
+   "platform": "shopify",
+   "domain": "sugarandmaple.com",
+   "name": "sugarandmaple.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 41 sp cùng ngách / 223 sp · 0 ads · giá 69.99–169.99",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 41,
+    "tong_san_pham": 223,
+    "gia_min": 69.99,
+    "gia_max": 169.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "surfaceinspired.com",
+   "platform": "shopify",
+   "domain": "surfaceinspired.com",
+   "name": "surfaceinspired.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "discover"
+   ],
+   "note": "discover: 199 sp cùng ngách / 215 sp · 0 ads · giá 8.95–385.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 199,
+    "tong_san_pham": 215,
+    "gia_min": 8.95,
+    "gia_max": 385.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "the-woodland.store",
+   "platform": "shopify",
+   "domain": "the-woodland.store",
+   "name": "the-woodland.store",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "google",
+    "discover"
+   ],
+   "note": "discover: 10 sp cùng ngách / 16 sp · 1 ads · giá 9.99–82.99",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 10,
+    "tong_san_pham": 16,
+    "gia_min": 9.99,
+    "gia_max": 82.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "thecolorofwhimsy.com",
+   "platform": "shopify",
+   "domain": "thecolorofwhimsy.com",
+   "name": "thecolorofwhimsy.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 69 sp cùng ngách / 2500 sp · 0 ads · giá 1.5–55.0",
+   "keywords": [
+    "layered wood name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 69,
+    "tong_san_pham": 2500,
+    "gia_min": 1.5,
+    "gia_max": 55.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "thehandmadesignco.com",
+   "platform": "shopify",
+   "domain": "thehandmadesignco.com",
+   "name": "thehandmadesignco.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 304 sp cùng ngách / 654 sp · 0 ads · giá 10.0–340.0",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 304,
+    "tong_san_pham": 654,
+    "gia_min": 10.0,
+    "gia_max": 340.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "thelittlelumberco.com",
+   "platform": "shopify",
+   "domain": "thelittlelumberco.com",
+   "name": "thelittlelumberco.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "google",
+    "discover"
+   ],
+   "note": "discover: 20 sp cùng ngách / 71 sp · 0 ads · giá 45.0–130.0",
+   "keywords": [
+    "layered wood name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 20,
+    "tong_san_pham": 71,
+    "gia_min": 45.0,
+    "gia_max": 130.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "thewarpedboard.com",
+   "platform": "shopify",
+   "domain": "thewarpedboard.com",
+   "name": "thewarpedboard.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "google",
+    "discover"
+   ],
+   "note": "discover: 20 sp cùng ngách / 57 sp · 0 ads · giá 24.99–214.99",
+   "keywords": [
+    "layered wood name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 20,
+    "tong_san_pham": 57,
+    "gia_min": 24.99,
+    "gia_max": 214.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "timberwooddesigns.ca",
+   "platform": "shopify",
+   "domain": "timberwooddesigns.ca",
+   "name": "timberwooddesigns.ca",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "google",
+    "discover"
+   ],
+   "note": "discover: 20 sp cùng ngách / 41 sp · 0 ads · giá 24.0–370.0",
+   "keywords": [
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 20,
+    "tong_san_pham": 41,
+    "gia_min": 24.0,
+    "gia_max": 370.0
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "weavercustomengravings.com",
+   "platform": "shopify",
+   "domain": "weavercustomengravings.com",
+   "name": "weavercustomengravings.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "discover"
+   ],
+   "note": "discover: 288 sp cùng ngách / 767 sp · 0 ads · giá 4.99–239.99",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 0,
+    "san_pham_cung_nganh": 288,
+    "tong_san_pham": 767,
+    "gia_min": 4.99,
+    "gia_max": 239.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "wecreat.com",
+   "platform": "shopify",
+   "domain": "wecreat.com",
+   "name": "wecreat.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 0 sp cùng ngách / 39 sp · 1 ads · giá None–None",
+   "keywords": [
+    "personalized wooden name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 0,
+    "tong_san_pham": 39,
+    "gia_min": null,
+    "gia_max": null
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "wondroot.com",
+   "platform": "shopify",
+   "domain": "wondroot.com",
+   "name": "wondroot.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "tay",
+    "discover"
+   ],
+   "note": "discover: 395 sp cùng ngách / 395 sp · 7 ads · giá 19.99–199.99",
+   "keywords": [
+    "layered wood name sign",
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 7,
+    "san_pham_cung_nganh": 395,
+    "tong_san_pham": 395,
+    "gia_min": 19.99,
+    "gia_max": 199.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "woodemon.com",
+   "platform": "shopify",
+   "domain": "woodemon.com",
+   "name": "woodemon.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "bing",
+    "fbads",
+    "google",
+    "discover"
+   ],
+   "note": "discover: 171 sp cùng ngách / 912 sp · 8 ads · giá 3.9–149.9",
+   "keywords": [
+    "personalized wooden name sign",
+    "wooden name sign nursery"
+   ],
+   "discover": {
+    "so_ads": 8,
+    "san_pham_cung_nganh": 171,
+    "tong_san_pham": 912,
+    "gia_min": 3.9,
+    "gia_max": 149.9
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "xtool.com",
+   "platform": "shopify",
+   "domain": "xtool.com",
+   "name": "xtool.com",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "fbads",
+    "discover"
+   ],
+   "note": "discover: 1 sp cùng ngách / 996 sp · 1 ads · giá 28.99–28.99",
+   "keywords": [
+    "layered wood name sign"
+   ],
+   "discover": {
+    "so_ads": 1,
+    "san_pham_cung_nganh": 1,
+    "tong_san_pham": 996,
+    "gia_min": 28.99,
+    "gia_max": 28.99
+   },
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:BlissfulWondersCo",
+   "platform": "etsy",
+   "etsy": "BlissfulWondersCo",
+   "name": "BlissfulWondersCo",
+   "url": "https://www.etsy.com/shop/BlissfulWondersCo",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 5 · ~32800 sales · 4.9★ · 3 years on Etsy · ship từ Canada",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:BoyzMomKnits",
+   "platform": "etsy",
+   "etsy": "BoyzMomKnits",
+   "name": "BoyzMomKnits",
+   "url": "https://www.etsy.com/shop/BoyzMomKnits",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 6 · ~1300 sales · 4.9★ · 9 years on Etsy · ship từ Riga, Latvia",
+   "keywords": [
+    "personalized nursery name sign"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:CarpenterFarmhouse",
+   "platform": "etsy",
+   "etsy": "CarpenterFarmhouse",
+   "name": "CarpenterFarmhouse",
+   "url": "https://www.etsy.com/shop/CarpenterFarmhouse",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 5 · ~100800 sales · 4.9★ · 10 years on Etsy · ship từ South Carolina, United States",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:CraftingStudioOnEtsy",
+   "platform": "etsy",
+   "etsy": "CraftingStudioOnEtsy",
+   "name": "CraftingStudioOnEtsy",
+   "url": "https://www.etsy.com/shop/CraftingStudioOnEtsy",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 5 · ~11900 sales · 4.9★ · 9 years on Etsy · ship từ Bispingen, Germany",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:DTLeatherArt",
+   "platform": "etsy",
+   "etsy": "DTLeatherArt",
+   "name": "DTLeatherArt",
+   "url": "https://www.etsy.com/shop/DTLeatherArt",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 10 · ~3500 sales · 4.8★ · 1.5 years on Etsy · ship từ Vietnam",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:EstesDesignStudio",
+   "platform": "etsy",
+   "etsy": "EstesDesignStudio",
+   "name": "EstesDesignStudio",
+   "url": "https://www.etsy.com/shop/EstesDesignStudio",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 5 · ~62300 sales · 5★ · 6 years on Etsy · ship từ Florida, United States",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:GamersTreasuresCo",
+   "platform": "etsy",
+   "etsy": "GamersTreasuresCo",
+   "name": "GamersTreasuresCo",
+   "url": "https://www.etsy.com/shop/GamersTreasuresCo",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 13 · ~34400 sales · 4.8★ · 4 years on Etsy · ship từ Canada",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:grossbale",
+   "platform": "etsy",
+   "etsy": "grossbale",
+   "name": "grossbale",
+   "url": "https://www.etsy.com/shop/grossbale",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 9 · ~5000 sales · 4.9★ · 3 years on Etsy · ship từ California, United States",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:jHouseEngraved",
+   "platform": "etsy",
+   "etsy": "jHouseEngraved",
+   "name": "jHouseEngraved",
+   "url": "https://www.etsy.com/shop/jHouseEngraved",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 5 · ~17800 sales · 5★ · 5 years on Etsy · ship từ Ottawa, Canada",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:ModWoodCo",
+   "platform": "etsy",
+   "etsy": "ModWoodCo",
+   "name": "ModWoodCo",
+   "url": "https://www.etsy.com/shop/ModWoodCo",
+   "first_seen": "2026-10-14",
+   "added_on": "2026-10-14",
+   "sources": [
+    "tay"
+   ],
+   "note": "chuyển từ etsy_watch.txt cũ (14/10)",
+   "keywords": [],
+   "active": true
+  },
+  {
+   "id": "etsy:PikuLights",
+   "platform": "etsy",
+   "etsy": "PikuLights",
+   "name": "PikuLights",
+   "url": "https://www.etsy.com/shop/PikuLights",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 7 · ~7300 sales · 5★ · 10 years on Etsy · ship từ Riga, Latvia",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:PouraStudio",
+   "platform": "etsy",
+   "etsy": "PouraStudio",
+   "name": "PouraStudio",
+   "url": "https://www.etsy.com/shop/PouraStudio",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 6 · ~292 sales · 4.9★ · 6 years on Etsy · ship từ Da Nang, Vietnam",
+   "keywords": [
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:Rvlightbender",
+   "platform": "etsy",
+   "etsy": "Rvlightbender",
+   "name": "Rvlightbender",
+   "url": "https://www.etsy.com/shop/Rvlightbender",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 8 · ~4600 sales · 4.9★ · 2.5 years on Etsy · ship từ Philippines",
+   "keywords": [
+    "personalized nursery name sign"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:santranstore",
+   "platform": "etsy",
+   "etsy": "santranstore",
+   "name": "santranstore",
+   "url": "https://www.etsy.com/shop/santranstore",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 7 · ~2300 sales · 4.6★ · 1 year on Etsy · ship từ Australia",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:StayNaturalStore",
+   "platform": "etsy",
+   "etsy": "StayNaturalStore",
+   "name": "StayNaturalStore",
+   "url": "https://www.etsy.com/shop/StayNaturalStore",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 11 · ~3500 sales · 4.9★ · 1 year on Etsy · ship từ United Kingdom",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  },
+  {
+   "id": "etsy:theolivebranchmiami",
+   "platform": "etsy",
+   "etsy": "theolivebranchmiami",
+   "name": "theolivebranchmiami",
+   "url": "https://www.etsy.com/shop/theolivebranchmiami",
+   "first_seen": "2026-10-14",
+   "sources": [
+    "etsy-discover"
+   ],
+   "note": "điểm 5 · ~45700 sales · 5★ · 4 years on Etsy · ship từ Florida, United States",
+   "keywords": [
+    "personalized nursery name sign",
+    "wooden name sign nursery"
+   ],
+   "active": true,
+   "added_on": "2026-10-14"
+  }
+ ]
+}

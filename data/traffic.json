@@ -1,0 +1,112 @@
+{
+ "updated_at": "2026-10-14T09:00:05Z",
+ "domains": {
+  "prints10.com": {
+   "latest": {
+    "status": "ok",
+    "visits": 276500,
+    "visits_text": "276.5K",
+    "change_pct": 75.4,
+    "bounce_pct": 52.76,
+    "pages_per_visit": 2.63,
+    "duration": "00:01:50",
+    "global_rank": null,
+    "month": "2026-09",
+    "top_countries": [
+     {
+      "country": "United States",
+      "pct": 42.08
+     }
+    ],
+    "checked": "2026-10-14",
+    "at": "2026-10-14T09:00:05Z",
+    "source": "SimilarWeb (web miễn phí, Chrome 9230)"
+   },
+   "history": {
+    "2026-08": {
+     "visits": 157640,
+     "derived": true,
+     "checked": "2026-10-14"
+    },
+    "2026-09": {
+     "visits": 276500,
+     "change_pct": 75.4,
+     "checked": "2026-10-14"
+    }
+   },
+   "last_check": "2026-10-14",
+   "last_status": "ok"
+  },
+  "woodemon.com": {
+   "latest": {
+    "status": "ok",
+    "visits": 39900,
+    "visits_text": "39.9K",
+    "change_pct": 6.14,
+    "bounce_pct": 52.59,
+    "pages_per_visit": 2.36,
+    "duration": "00:00:29",
+    "global_rank": null,
+    "month": "2026-09",
+    "top_countries": [
+     {
+      "country": "United States",
+      "pct": 62.16
+     },
+     {
+      "country": "Vietnam",
+      "pct": 17.6
+     },
+     {
+      "country": "India",
+      "pct": 5.7
+     },
+     {
+      "country": "Canada",
+      "pct": 5.09
+     },
+     {
+      "country": "Germany",
+      "pct": 4.75
+     }
+    ],
+    "checked": "2026-10-14",
+    "at": "2026-10-14T08:58:26Z",
+    "source": "similarweb (phiên chính 14/10)"
+   },
+   "history": {
+    "2026-08": {
+     "visits": 37592,
+     "derived": true,
+     "checked": "2026-10-14"
+    },
+    "2026-09": {
+     "visits": 39900,
+     "change_pct": 6.14,
+     "checked": "2026-10-14"
+    }
+   },
+   "last_check": "2026-10-14",
+   "last_status": "ok"
+  }
+ },
+ "checks": [
+  {
+   "date": "2026-10-14",
+   "domain": "woodemon.com",
+   "status": "ok",
+   "note": "phiên chính tra tay"
+  },
+  {
+   "date": "2026-10-14",
+   "domain": "prints10.com",
+   "status": "ok"
+  },
+  {
+   "date": "2026-10-14",
+   "domain": "emmafy.com",
+   "status": "limit",
+   "note": "SimilarWeb báo hết lượt (You’ve hit your search limit)"
+  }
+ ]
+}

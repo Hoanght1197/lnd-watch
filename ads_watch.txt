@@ -1,4 +1,0 @@
-# mỗi dòng 1 domain (tìm ads có landing về domain đó) hoặc page:<page_id> (mọi ads của 1 Facebook page)
-wondroot.com
-woodemon.com
-craftmkr.com

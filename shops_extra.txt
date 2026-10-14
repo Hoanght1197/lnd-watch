@@ -1,0 +1,9 @@
+# shops_extra.txt — thêm / tắt shop bằng tay (sync_shops.py đọc file này mỗi lần chạy)
+# Mỗi dòng 1 shop:
+#   domain.com                 thêm shop Shopify (không https://, không www.)
+#   etsy:TenShop               thêm shop Etsy
+#   !domain.com / !etsy:Ten    TẮT shop (giữ lịch sử, thôi thu số liệu, ẩn khỏi bảng xếp hạng)
+# Phần sau dấu # là ghi chú.
+
+etsy:ModWoodCo        # chuyển từ etsy_watch.txt cũ (14/10)
+!cadenlane.com        # shop quần áo em bé, chỉ 43 sp ngách / 1246 sp (bỏ từ 14/10)

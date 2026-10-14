@@ -1,5 +1,5 @@
-# Thu dữ liệu Shopify đối thủ mỗi ngày 23:00 UTC (= 6:00 sáng giờ VN) rồi commit data/.
-# Etsy + FB ads chạy ở máy anh Hoàng (collect/run_local.ps1) vì Etsy/FB chặn IP cloud.
+# Shopify nhẹ mỗi ngày 23:00 UTC (= 6:00 sáng giờ VN): /meta.json + 30 sp mới nhất cho mọi shop trong data/shops.json,
+# rồi build leaderboard + alerts và commit data/. Ads FB, Etsy, SimilarWeb chạy ở máy anh Hoàng (collect/run_local.ps1).
 name: shopify-daily
 
 on:
@@ -17,7 +17,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -28,14 +28,12 @@ jobs:
       - name: Cài thư viện
         run: pip install -r collect/requirements.txt
 
-      - name: Thu Shopify (watch.txt)
-        # ngày snapshot theo giờ VN để khớp với Etsy/ads chạy ở máy local lúc 6:05 sáng
-        run: python collect/run_shopify.py --date "$(TZ=Asia/Ho_Chi_Minh date +%F)"
+      - name: Thu Shopify nhẹ (shops.json)
+        # ngày dữ liệu theo giờ VN để khớp phần local chạy 6:05 sáng
+        run: python collect/run_cloud.py --date "$(TZ=Asia/Ho_Chi_Minh date +%F)"
 
-      - name: Tổng hợp + kiểm schema
-        run: |
-          python collect/build_summary.py
-          python collect/check_schema.py
+      - name: Build leaderboard + alerts
+        run: python collect/build.py
 
       - name: Commit + push data/
         run: |
@@ -46,10 +44,9 @@ jobs:
           fi
           DATE=$(TZ=Asia/Ho_Chi_Minh date +%F)
           git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com commit -m "data: $DATE shopify"
-          # máy local có thể vừa push Etsy/ads → rebase (giữ bản của mình khi file tổng hợp xung đột) rồi build lại
+          # máy local có thể vừa push → rebase (file tổng hợp xung đột thì giữ bản của mình) rồi build lại
           git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com pull --rebase -X theirs
-          python collect/build_summary.py
-          python collect/check_schema.py
+          python collect/build.py
           git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com add data
           if ! git diff --cached --quiet; then
             git -c user.name=lnd-bot -c user.email=bot@users.noreply.github.com commit -m "data: $DATE shopify (build lại sau pull)"
