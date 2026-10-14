@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light dark}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>LND Watch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: sidebar trái (7 màn hình) + vùng làm việc dày số; mobile: thanh tab ngang dính trên đầu.
+   Chất liệu: gỗ ép laser trên tường phòng em bé -> nền xám xanh lá thông, nhấn xanh thông đậm, ảnh sản phẩm là điểm sáng. */
+:root{
+  --bg:#f2f4f1; --surface:#ffffff; --surface-2:#eaeee9; --ink:#17201b; --ink-2:#4b5650; --muted:#737e77; --line:#dbe1dc;
+  --accent:#28634f; --accent-ink:#ffffff; --accent-soft:#d9eae2;
+  --good:#0a8a0a; --warn:#b97c00; --serious:#c9572c; --crit:#c33232;
+  --good-bg:#e1f3e1; --warn-bg:#fbf0d4; --serious-bg:#fbe5dc; --crit-bg:#f9dfdf;
+  --seq:#2a78d6;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6; --s8:#e34948;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r:8px; --gut:16px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#101412; --surface:#181d1a; --surface-2:#202723; --ink:#e7ece8; --ink-2:#b3bdb6; --muted:#87918b; --line:#2b332e;
+  --accent:#6dbfa2; --accent-ink:#0b1813; --accent-soft:#1d3a30;
+  --good:#3fc43f; --warn:#f2b632; --serious:#ec835a; --crit:#ef6b6b;
+  --good-bg:#16301a; --warn-bg:#352a10; --serious-bg:#3a2117; --crit-bg:#3a1a1a;
+  --seq:#3987e5;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#101412; --surface:#181d1a; --surface-2:#202723; --ink:#e7ece8; --ink-2:#b3bdb6; --muted:#87918b; --line:#2b332e;
+  --accent:#6dbfa2; --accent-ink:#0b1813; --accent-soft:#1d3a30;
+  --good:#3fc43f; --warn:#f2b632; --serious:#ec835a; --crit:#ef6b6b;
+  --good-bg:#16301a; --warn-bg:#352a10; --serious-bg:#3a2117; --crit-bg:#3a1a1a;
+  --seq:#3987e5;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45}
+a{color:var(--accent)}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num,td.n,.mono{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--f-mono)}
+
+.app{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;padding:20px 12px;border-right:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;gap:18px}
+.brand{padding:0 8px}
+.brand b{font-family:var(--f-display);font-size:22px;letter-spacing:-.01em;display:block}
+.brand span{color:var(--muted);font-size:12px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:6px;color:var(--ink-2);text-decoration:none;font-weight:500}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--ink)}
+.nav a small{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.side-foot{margin-top:auto;font-size:12px;color:var(--muted);padding:0 8px;display:flex;flex-direction:column;gap:6px}
+.mode{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;padding:3px 8px;border-radius:99px;background:var(--surface-2);color:var(--ink-2);width:max-content}
+.mode i{width:7px;height:7px;border-radius:50%;background:var(--warn)}
+.mode.live i{background:var(--good)}
+
+main{padding-inline:clamp(16px,3vw,32px);padding-block:24px 64px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.ph{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.ph h1{font-family:var(--f-display);font-size:28px;line-height:1.1;margin:0;letter-spacing:-.015em;text-wrap:balance}
+.ph p{margin:4px 0 0;color:var(--ink-2);max-width:68ch}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h2{font-family:var(--f-display);font-size:17px;margin:0;letter-spacing:-.005em}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.panel-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.panel-b{padding:16px}
+.note{font-size:12px;color:var(--muted)}
+.banner{padding:10px 14px;border-radius:var(--r);background:var(--warn-bg);color:var(--ink);border:1px solid color-mix(in oklab,var(--warn) 40%,transparent);font-size:13px}
+.banner.err{background:var(--crit-bg);border-color:color-mix(in oklab,var(--crit) 40%,transparent)}
+.empty{padding:28px 16px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink-2);margin-bottom:4px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.kpi .v{font-family:var(--f-display);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .l{font-size:12px;color:var(--ink-2)}
+.kpi .s{font-size:11px;color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--ink-2)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:6px 10px;cursor:pointer;font-size:13px;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters label{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted);font-weight:500}
+.filters select,.filters input{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 8px;font-size:13px;min-width:0}
+.filters input[type=number]{width:84px}
+.filters input[type=search]{width:180px}
+
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface)}
+td{padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+th.n,td.n{text-align:right}
+tbody tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--surface-2)}
+td.sticky,th.sticky{position:sticky;left:0;background:var(--surface);z-index:1}
+tr.click:hover td.sticky{background:var(--surface-2)}
+.shopcell{display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:3px;flex:none}
+.plat{font-family:var(--f-mono);font-size:10px;padding:1px 6px;border-radius:4px;background:var(--surface-2);color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em}
+.dim{color:var(--muted)}
+.up{color:var(--good)} .down{color:var(--crit)}
+.chg{border-radius:4px;padding:1px 4px}
+.chg.up{background:var(--good-bg)} .chg.down{background:var(--crit-bg)}
+.spark{display:block}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:99px;white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good)} .pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.serious{background:var(--serious-bg);color:var(--serious)} .pill.crit{background:var(--crit-bg);color:var(--crit)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;background:var(--surface-2);color:var(--ink-2)}
+
+.ov{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.feed{display:flex;flex-direction:column}
+.al{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.al:last-child{border-bottom:0}
+.al:hover{background:var(--surface-2)}
+.al .th{width:44px;height:44px;border-radius:6px;background:var(--surface-2);overflow:hidden;display:grid;place-items:center;font-family:var(--f-mono);font-size:10px;color:var(--muted)}
+.al .th img{width:100%;height:100%;object-fit:cover}
+.al .t{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.al .m{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:12px;color:var(--muted)}
+.al .d{color:var(--ink);font-weight:500;font-size:12px}
+
+.chart{position:relative;height:300px}
+.chart.sm{height:220px}
+.label-true{font-size:11px;font-weight:600;color:var(--good);background:var(--good-bg);padding:2px 8px;border-radius:99px}
+
+/* Lưới design */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--ink-2)}
+.chip b{font-family:var(--f-mono);font-weight:500;color:var(--muted);margin-left:4px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"] b{color:var(--bg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.card{display:flex;flex-direction:column;gap:8px;min-width:0}
+.card .im{position:relative;aspect-ratio:1/1;max-width:100%;border-radius:var(--r);overflow:hidden;background:var(--surface-2);border:1px solid var(--line);display:block}
+.card .im img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+.card a.im:hover img{transform:scale(1.03)}
+.ph-img{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:14px;color:var(--ink-2);font-family:var(--f-display);font-size:15px;
+  background:repeating-linear-gradient(115deg,var(--surface-2) 0 10px,color-mix(in oklab,var(--surface-2) 70%,var(--line)) 10px 11px)}
+.ph-img small{display:block;font-family:var(--f-mono);font-size:10px;color:var(--muted);margin-top:6px}
+.badges{position:absolute;top:8px;left:8px;right:8px;display:flex;gap:4px;flex-wrap:wrap;pointer-events:none}
+.bd{font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;background:color-mix(in oklab,var(--surface) 92%,transparent);color:var(--ink);font-variant-numeric:tabular-nums;box-shadow:0 1px 2px rgb(0 0 0 / .12)}
+.bd.rk{background:var(--ink);color:var(--bg)}
+.bd.bs{background:var(--warn);color:#1e1600}
+.card .ti{font-size:13px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.card .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12px;color:var(--muted)}
+.card .pr{font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.card .row .shopcell{min-width:0;gap:5px}
+.card .row .shopcell span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .tags{display:flex;flex-wrap:wrap;gap:4px}
+.card.mine .im{outline:2px solid var(--accent);outline-offset:-2px}
+.mine-strip{display:grid;grid-auto-flow:column;grid-auto-columns:150px;gap:12px;overflow-x:auto;padding-bottom:4px}
+.pager{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center}
+.pager button{min-width:34px}
+.pager button[aria-current="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Ads */
+.adgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.ad{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.ad .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.ad .days{font-family:var(--f-display);font-size:28px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;text-align:right}
+.ad .days small{display:block;font-family:var(--f-body);font-size:11px;font-weight:400;color:var(--muted)}
+.ad .txt{font-size:13px;color:var(--ink-2)}
+.ad .dest{display:flex;gap:8px;align-items:center;font-size:12px;min-width:0}
+.ad .dest img,.ad .dest .ph{width:40px;height:40px;border-radius:5px;object-fit:cover;background:var(--surface-2);flex:none}
+.ad .dest span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grp{display:flex;flex-direction:column;gap:10px}
+.grp h3{margin:6px 0 0;font-size:13px;display:flex;align-items:center;gap:8px}
+
+/* Mùa vụ heatmap */
+.hm{border-collapse:separate;border-spacing:3px;width:auto}
+.hm th{font-family:var(--f-mono);font-size:10px;text-transform:none;letter-spacing:0;padding:2px;border:0;text-align:center}
+.hm th.sh{text-align:left;padding-right:10px;font-family:var(--f-body);font-size:12px;color:var(--ink-2);font-weight:500}
+.hm td{padding:0;border:0;width:30px;height:30px;border-radius:4px;text-align:center;font-family:var(--f-mono);font-size:10px;color:var(--ink);position:relative}
+.hm td.z{background:var(--surface-2);color:transparent}
+.hm td .sz{position:absolute;top:2px;right:2px;width:6px;height:6px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 1.5px var(--surface)}
+.hm th.xmas{background:color-mix(in oklab,var(--crit) 18%,transparent);border-radius:4px;color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--ink-2);align-items:center}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+/* Tooltip + modal */
+#tip{position:fixed;z-index:50;pointer-events:none;max-width:280px;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:6px;box-shadow:0 4px 14px rgb(0 0 0 / .2);opacity:0;transition:opacity .1s}
+#tip.on{opacity:1}
+[data-tip]{cursor:help}
+.modal{position:fixed;inset:0;z-index:40;background:rgb(0 0 0 / .5);display:grid;place-items:center;padding:16px}
+.modal .box{background:var(--surface);border-radius:12px;width:min(880px,100%);max-height:calc(100vh - 32px);overflow:auto;border:1px solid var(--line)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+
+@media (max-width:1440px){ .ov{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;height:auto;flex-direction:row;align-items:center;padding:8px 12px;border-right:0;border-bottom:1px solid var(--line);gap:10px}
+  .brand span,.side-foot{display:none}
+  .brand b{font-size:17px;white-space:nowrap}
+  .nav{flex-direction:row;overflow-x:auto;gap:2px;scrollbar-width:none;min-width:0}
+  .nav a{white-space:nowrap;padding:6px 10px}
+  .nav a small{display:none}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .filters input[type=search]{width:100%}
+  .filters label.wide{flex:1 1 100%}
+  td.sticky,th.sticky{position:static}
+  .two{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><b>LND Watch</b><span>Đối thủ bảng tên gỗ trẻ em</span></div>
+    <nav class="nav" id="nav" aria-label="Màn hình"></nav>
+    <div class="side-foot">
+      <span class="mode" id="mode"><i></i><span>…</span></span>
+      <span id="upd">Đang tải…</span>
+      <span>Chỉ số đếm được. Không ước tính doanh thu.</span>
+    </div>
+  </aside>
+  <main id="main" aria-live="polite"><div class="empty"><b>Đang tải dữ liệu…</b></div></main>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+/* ===== Cấu hình (đổi được) ===== */
+const RAW_BASE = "data/";
+const DATA_MODE = "remote"; // "remote" | "sample"
+
+window.__errs = [];
+window.addEventListener("error", e => { if (e.message) window.__errs.push(e.message + " @" + (e.lineno || "")); });
+window.addEventListener("unhandledrejection", e => window.__errs.push("promise: " + (e.reason && e.reason.message || e.reason)));
+
+/* ===== Tiện ích ===== */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const nf = new Intl.NumberFormat("vi-VN");
+const fmtN = v => v == null || isNaN(v) ? "—" : nf.format(v);
+const fmtUSD = v => v == null || isNaN(v) ? "—" : "$" + Number(v).toFixed(2);
+const fmtSigned = v => v == null || isNaN(v) ? "—" : (v > 0 ? "+" : "") + nf.format(v);
+const fmtD = iso => { if (!iso) return "—"; const m = String(iso).match(/(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}` : "—"; };
+const fmtDT = iso => { if (!iso) return "—"; const t = new Date(iso); if (isNaN(t)) return fmtD(iso);
+  const v = new Date(t.getTime() + 7 * 3600e3); const p = n => String(n).padStart(2, "0");
+  return `${p(v.getUTCDate())}/${p(v.getUTCMonth() + 1)} ${p(v.getUTCHours())}:${p(v.getUTCMinutes())}`; };
+const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
+const addDays = (iso, n) => { const t = new Date(iso + "T00:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+const median = xs => { xs = xs.filter(x => x != null && !isNaN(x)).sort((a, b) => a - b); if (!xs.length) return null; const n = xs.length; return n % 2 ? xs[(n - 1) / 2] : (xs[n / 2 - 1] + xs[n / 2]) / 2; };
+const tipAttr = (src, at) => `data-tip="${esc(`Nguồn: ${src || "?"} · quét: ${fmtDT(at)}`)}" tabindex="0"`;
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const LS = { get(k, d) { try { const v = localStorage.getItem("lndw." + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+             set(k, v) { try { localStorage.setItem("lndw." + k, JSON.stringify(v)); } catch {} } };
+
+/* ===== Tải dữ liệu ===== */
+const S = { idx: null, shop: {}, etsy: {}, ads: {}, alerts: [], themes: null, mine: null, missing: [], errors: [], today: null };
+function loadScript(src) { return new Promise(res => { const s = document.createElement("script"); s.src = src; s.onload = () => res(true); s.onerror = () => res(false); document.head.appendChild(s); }); }
+async function getJSON(path) {
+  try {
+    if (DATA_MODE === "sample") {
+      const v = (window.SAMPLE_DATA || {})[path];
+      if (v === undefined) { S.missing.push(path); return null; }
+      return v;
+    }
+    const r = await fetch(RAW_BASE + path + "?t=" + Math.floor(Date.now() / 60000), { cache: "no-store" });
+    if (!r.ok) { S.missing.push(path + " (" + r.status + ")"); return null; }
+    return await r.json();
+  } catch (e) { S.errors.push(path + ": " + (e.message || e)); return null; }
+}
+async function loadAll() {
+  if (DATA_MODE === "sample" && !window.SAMPLE_DATA) {
+    const ok = await loadScript("sample-data.js");
+    if (!ok) S.errors.push("không tải được sample-data.js");
+  }
+  S.idx = await getJSON("index.json");
+  if (!S.idx) return;
+  const idx = S.idx;
+  const jobs = [];
+  (idx.shopify || []).forEach(s => jobs.push(getJSON(`shopify/${s.domain}/summary.json`).then(v => { if (v) S.shop[s.domain] = v; })));
+  (idx.etsy || []).forEach(s => jobs.push(getJSON(`etsy/${s.shop}/summary.json`).then(v => { if (v) S.etsy[s.shop] = v; })));
+  (idx.ads || []).forEach(s => jobs.push(getJSON(`ads/${s.key}/summary.json`).then(v => { if (v) S.ads[s.key] = v; })));
+  jobs.push(getJSON("alerts.json").then(v => { S.alerts = Array.isArray(v) ? v : []; }));
+  jobs.push(getJSON("themes.json").then(v => { S.themes = v; }));
+  jobs.push(getJSON("mine.json").then(v => { S.mine = v; }));
+  await Promise.all(jobs);
+  S.missing = S.missing.filter(p => !p.startsWith("mine.json")); // mine.json là tuỳ chọn
+  S.today = (idx.dates && idx.dates[idx.dates.length - 1]) || (idx.updated_at || "").slice(0, 10) || new Date().toISOString().slice(0, 10);
+}
+
+/* ===== Mô hình chung ===== */
+let SHOPS = []; // [{key, plat, name, color}]
+function buildModel() {
+  const idx = S.idx || {};
+  const list = [];
+  (idx.shopify || []).forEach(s => list.push({ key: s.domain, plat: "shopify", name: s.name || s.domain, meta: s }));
+  (idx.etsy || []).forEach(s => list.push({ key: s.shop, plat: "etsy", name: s.shop, meta: s }));
+  list.forEach((s, i) => s.color = i < 8 ? `var(--s${i + 1})` : "var(--muted)");
+  list.forEach((s, i) => s.ci = i);
+  SHOPS = list;
+  EXTRA_COLOR = {}; let k = list.length;
+  (idx.ads || []).forEach(a => { if (!list.some(s => s.key === a.key)) { EXTRA_COLOR[a.key] = k < 8 ? `var(--s${k + 1})` : "var(--muted)"; k++; } });
+}
+let EXTRA_COLOR = {};
+const shopOf = key => SHOPS.find(s => s.key === key);
+const colorOf = key => (shopOf(key) || {}).color || EXTRA_COLOR[key] || "var(--muted)";
+const resolveColor = c => c.startsWith("var(") ? cssv(c.slice(4, -1)) : c;
+function seriesAt(series, date) { // bản ghi gần nhất có ngày <= date
+  if (!series || !series.length) return null; let best = null;
+  for (const r of series) if (r.date <= date && (!best || r.date > best.date)) best = r;
+  return best;
+}
+function designItems() {
+  const out = [];
+  for (const [dom, sm] of Object.entries(S.shop)) (sm.products || []).forEach(p => out.push({
+    plat: "shopify", shop: dom, id: dom + ":" + p.handle, title: p.title, image: p.thumb || p.image, url: p.url, price: p.price_min,
+    date: p.published_at, rank: p.rank, rank_7d: p.rank_7d, reviews: null, reviews_7d: null, favorites: null, favorites_7d: null,
+    bestseller: false, theme: p.theme || "khac", layout: p.layout || "khac", font: p.font || "khac", season: p.season || [], src: sm.source, at: sm.updated_at, handle: p.handle }));
+  for (const [shop, sm] of Object.entries(S.etsy)) (sm.listings || []).forEach((l, i) => out.push({
+    plat: "etsy", shop, id: shop + ":" + l.id, title: l.title, image: l.thumb || l.image, url: l.url, price: l.price,
+    date: l.listed_on, rank: i + 1, rank_7d: null, reviews: l.reviews, reviews_7d: l.reviews_7d, favorites: l.favorites, favorites_7d: l.favorites_7d,
+    bestseller: !!l.bestseller, theme: l.theme || "khac", layout: l.layout || "khac", font: l.font || "khac", season: l.season || [], src: sm.source, at: sm.updated_at }));
+  return out;
+}
+let ITEMS = [];
+
+/* ===== CSV ===== */
+let dlNS; // namespace downloads của viewer (nếu có)
+async function saveCSV(name, header, rows) {
+  const q = v => { v = v == null ? "" : String(v); return /[",\n;]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const csv = "﻿" + [header, ...rows].map(r => r.map(q).join(",")).join("\n");
+  const filename = `${name}_${S.today || "data"}.csv`;
+  try {
+    if (dlNS === undefined && window.claude && window.claude.use) dlNS = await window.claude.use("downloads");
+    if (dlNS) { await dlNS.save({ filename, data: new Blob([csv], { type: "text/csv" }) }); return; }
+  } catch (e) { if (e && e.code === "declined") return; }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+const csvBtn = id => `<button class="btn" data-csv="${id}" type="button">Tải CSV</button>`;
+const CSV = {};
+
+/* ===== Sparkline ===== */
+function spark(vals, color, w = 84, h = 24) {
+  vals = vals.filter(v => v != null && !isNaN(v));
+  if (vals.length < 2) return `<span class="dim">—</span>`;
+  const mn = Math.min(...vals), mx = Math.max(...vals), rg = mx - mn || 1;
+  const pts = vals.map((v, i) => [2 + i * (w - 6) / (vals.length - 1), h - 3 - (v - mn) / rg * (h - 6)]);
+  const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join("");
+  const last = pts[pts.length - 1];
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d} L${last[0].toFixed(1)} ${h} L2 ${h}Z" fill="${color}" opacity=".12"/><path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="2.5" fill="${color}"/></svg>`;
+}
+
+/* ===== Charts ===== */
+const CHARTS = [];
+function destroyCharts() { while (CHARTS.length) { try { CHARTS.pop().destroy(); } catch {} } }
+function chartBase() {
+  return {
+    responsive: true, maintainAspectRatio: false, animation: false,
+    interaction: { mode: "index", intersect: false },
+    plugins: { legend: { position: "bottom", labels: { color: cssv("--ink-2"), usePointStyle: true, pointStyle: "rectRounded", boxWidth: 10, boxHeight: 10, font: { family: cssv("--f-body") } } },
+      tooltip: { backgroundColor: cssv("--ink"), titleColor: cssv("--bg"), bodyColor: cssv("--bg"), padding: 9, cornerRadius: 6, boxPadding: 4, usePointStyle: true } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: cssv("--muted"), font: { family: cssv("--f-mono"), size: 10 } }, border: { color: cssv("--line") } },
+      y: { grid: { color: cssv("--line") }, border: { display: false }, ticks: { color: cssv("--muted"), font: { family: cssv("--f-mono"), size: 10 } }, beginAtZero: false }
+    }
+  };
+}
+function mkChart(canvas, cfg) {
+  if (!window.Chart) { canvas.parentElement.innerHTML = `<div class="empty"><b>Không tải được thư viện biểu đồ</b>Số liệu vẫn có trong bảng bên dưới.</div>`; return; }
+  const c = new Chart(canvas, cfg); CHARTS.push(c); return c;
+}
+
+/* ===== Router ===== */
+const SCREENS = [
+  ["tong-quan", "Tổng quan"], ["sales", "Sales Etsy"], ["design", "Lưới design"], ["gia", "Bảng giá"],
+  ["ads", "Ads board"], ["review", "Review"], ["mua-vu", "Lịch mùa vụ"]];
+function current() { const h = location.hash.replace("#", ""); return SCREENS.some(s => s[0] === h) ? h : LS.get("tab", "tong-quan"); }
+function renderNav() {
+  const cnt = { "tong-quan": SHOPS.length, sales: Object.keys(S.etsy).length, design: ITEMS.length, gia: Object.keys(S.shop).length,
+    ads: Object.values(S.ads).reduce((a, s) => a + (s.ads || []).filter(x => x.active).length, 0), review: Object.keys(S.etsy).length, "mua-vu": "" };
+  const cur = current();
+  $("#nav").innerHTML = SCREENS.map(([id, label]) => `<a href="#${id}" ${id === cur ? 'aria-current="page"' : ""}>${label}<small>${cnt[id] === "" ? "" : fmtN(cnt[id])}</small></a>`).join("");
+}
+function render() {
+  destroyCharts();
+  const cur = current(); LS.set("tab", cur); renderNav();
+  const main = $("#main");
+  let notice = "";
+  if (S.errors.length) notice += `<div class="banner err"><b>Lỗi tải dữ liệu.</b> ${esc(S.errors.join(" · "))}. Kiểm tra kết nối hoặc đường dẫn RAW_BASE rồi tải lại trang.</div>`;
+  if (S.missing.length && S.idx) notice += `<div class="banner">Chưa có dữ liệu cho ${S.missing.length} file: <span class="mono">${esc(S.missing.slice(0, 6).join(", "))}${S.missing.length > 6 ? "…" : ""}</span>. Các ô liên quan để trống.</div>`;
+  if (!S.idx) {
+    main.innerHTML = notice + `<div class="panel"><div class="empty"><b>Chưa có dữ liệu</b>Không đọc được <span class="mono">index.json</span>${DATA_MODE === "remote" ? " từ " + esc(RAW_BASE) : ""}. Bộ thu dữ liệu chạy lúc 6h sáng (giờ VN); thử tải lại sau.</div></div>`;
+    return;
+  }
+  const fn = { "tong-quan": vOverview, sales: vSales, design: vDesign, gia: vPrice, ads: vAds, review: vReview, "mua-vu": vSeason }[cur];
+  try { main.innerHTML = notice; fn(main); }
+  catch (e) { window.__errs.push(e.message); main.innerHTML = notice + `<div class="banner err">Màn hình này gặp lỗi khi dựng: ${esc(e.message)}</div>`; }
+  const act = $("#nav a[aria-current]"); if (act && matchMedia("(max-width:860px)").matches) { const nv = $("#nav"); nv.scrollLeft = act.offsetLeft - 60; }
+}
+function section(html) { const d = document.createElement("div"); d.style.display = "contents"; d.innerHTML = html; $("#main").appendChild(d); return d; }
+
+/* ===== 1. Tổng quan ===== */
+const ALERT_T = {
+  new_product: ["SP mới", "info"], price_change: ["Đổi giá", "warn"], rank_jump: ["Leo hạng", "good"], new_ad: ["Ad mới", "info"],
+  ad_long: ["Ad chạy lâu", "serious"], etsy_sales_spike: ["Sales tăng vọt", "good"], new_listing: ["Listing mới", "info"],
+  lost_bestseller: ["Mất Bestseller", "crit"], new_theme: ["Theme mới", "serious"] };
+function shopRow(s) {
+  const T = S.today;
+  if (s.plat === "shopify") {
+    const sm = S.shop[s.key]; const ser = sm?.series || []; const last = ser[ser.length - 1] || {};
+    const prods = sm?.products || [];
+    const new30 = prods.filter(p => p.published_at && daysBetween(p.published_at, T) <= 30).length;
+    const ads = S.ads[s.key]; const act = (ads?.ads || []).filter(a => a.active);
+    return { s, niche: last.n_niche ?? s.meta.n_products, new7: last.n_new_7d, new30: prods.length ? new30 : null,
+      p12: last.price_by_size?.["12"], p24: last.price_by_size?.["24"], rev: null, rev7: null, sales1: null, sales7: null,
+      adsN: ads ? act.length : null, adLong: act.length ? Math.max(...act.map(a => a.days_running || 0)) : null,
+      at: sm?.updated_at || s.meta.last_ok, src: sm?.source || "chưa có summary", adsrc: ads?.source, adat: ads?.updated_at,
+      spark: ser.map(r => r.n_niche ?? r.n_products), sparkL: "SP ngách 14 ngày" };
+  }
+  const sm = S.etsy[s.key]; const ser = sm?.series || [];
+  const ls = sm?.listings || [];
+  const new7 = ls.filter(l => l.listed_on && daysBetween(l.listed_on, T) <= 7).length;
+  const new30 = ls.filter(l => l.listed_on && daysBetween(l.listed_on, T) <= 30).length;
+  const daily = ser.map((r, i) => i ? r.sales - ser[i - 1].sales : null).slice(1);
+  return { s, niche: sm?.info?.listings ?? null, new7: ls.length ? new7 : null, new30: ls.length ? new30 : null, p12: null, p24: null,
+    rev: sm?.info?.reviews ?? null, rev7: sm?.deltas?.reviews_7d ?? null, sales1: sm?.deltas?.sales_1d ?? null, sales7: sm?.deltas?.sales_7d ?? null,
+    adsN: null, adLong: null, at: sm?.updated_at || s.meta.last_ok, src: sm?.source || "chưa có summary", spark: daily, sparkL: "Sales/ngày" };
+}
+function vOverview(main) {
+  const rows = SHOPS.map(shopRow);
+  const T = S.today;
+  const actAds = Object.values(S.ads).flatMap(a => (a.ads || []).filter(x => x.active));
+  const todayAl = S.alerts.filter(a => a.date === T).length;
+  const new7 = rows.reduce((a, r) => a + (r.new7 || 0), 0);
+  const sales7 = rows.filter(r => r.s.plat === "etsy").reduce((a, r) => a + (r.sales7 || 0), 0);
+  section(`
+  <div class="ph"><div><div class="eyebrow">Màn hình 1 · Watchlist</div><h1>Tổng quan đối thủ</h1>
+    <p>${Object.keys(S.shop).length} shop Shopify, ${Object.keys(S.etsy).length} shop Etsy, ${Object.keys(S.ads).length} trang quảng cáo. Dữ liệu ngày ${fmtD(T)}. Bấm vào 1 shop để xem chi tiết.</p></div></div>
+  <div class="kpis">
+    <div class="kpi" ${tipAttr("index.json", S.idx.updated_at)}><span class="l">Shop đang theo dõi</span><span class="v">${SHOPS.length}</span><span class="s">${Object.keys(S.shop).length} Shopify · ${Object.keys(S.etsy).length} Etsy</span></div>
+    <div class="kpi" ${tipAttr("products.json / listing Etsy", S.idx.updated_at)}><span class="l">Sản phẩm mới 7 ngày</span><span class="v">${fmtN(new7)}</span><span class="s">cộng mọi shop</span></div>
+    <div class="kpi" ${tipAttr("Etsy shop page (số thật)", S.idx.updated_at)}><span class="l">Sales Etsy 7 ngày</span><span class="v">${fmtSigned(sales7)}</span><span class="s">số đơn đếm được, không quy ra tiền</span></div>
+    <div class="kpi" ${tipAttr("Meta Ad Library", S.idx.updated_at)}><span class="l">Ads đang chạy</span><span class="v">${fmtN(actAds.length)}</span><span class="s">${actAds.filter(a => a.days_running > 14).length} ad chạy &gt; 14 ngày</span></div>
+    <div class="kpi" ${tipAttr("alerts.json", S.idx.updated_at)}><span class="l">Cảnh báo hôm nay</span><span class="v">${fmtN(todayAl)}</span><span class="s">${S.alerts.length} trong 90 ngày</span></div>
+  </div>
+  <div class="ov">
+    <div class="panel"><div class="panel-h"><h2>Watchlist</h2>${csvBtn("watch")}</div>
+      <div class="tw"><table><thead><tr>
+        <th class="sticky">Shop</th><th>Xu hướng</th><th class="n">SP ngách</th><th class="n">Mới 7d</th><th class="n">Mới 30d</th><th class="n">Giá 12in</th><th class="n">Giá 24in</th>
+        <th class="n">Review</th><th class="n">+Review 7d</th><th class="n">Sales 1d</th><th class="n">Sales 7d</th><th class="n">Ads chạy</th><th class="n">Ad lâu nhất</th><th>Quét lúc</th></tr></thead>
+      <tbody>${rows.map(r => `<tr class="click" data-shop="${esc(r.s.key)}" tabindex="0">
+        <td class="sticky"><div class="shopcell"><span class="dot" style="background:${r.s.color}"></span><b>${esc(r.s.name)}</b><span class="plat">${r.s.plat}</span></div></td>
+        <td title="${esc(r.sparkL)}">${spark(r.spark, resolveColor(r.s.color))}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtN(r.niche)}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtN(r.new7)}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtN(r.new30)}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtUSD(r.p12)}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtUSD(r.p24)}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtN(r.rev)}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtSigned(r.rev7)}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtSigned(r.sales1)}</td>
+        <td class="n" ${tipAttr(r.src, r.at)}>${fmtSigned(r.sales7)}</td>
+        <td class="n" ${tipAttr(r.adsrc || "chưa theo dõi ads", r.adat)}>${fmtN(r.adsN)}</td>
+        <td class="n" ${tipAttr(r.adsrc || "chưa theo dõi ads", r.adat)}>${r.adLong == null ? "—" : r.adLong + " ngày"}</td>
+        <td class="dim mono">${fmtDT(r.at)}</td></tr>`).join("")}</tbody></table></div>
+      <div class="panel-b note">“—” = nền tảng không có số này hoặc chưa quét. Mới 30d tính trên sản phẩm có trong summary.</div>
+    </div>
+    <div class="panel"><div class="panel-h"><h2>Cảnh báo</h2>
+      <div class="filters"><select id="alT" aria-label="Loại cảnh báo"><option value="">Mọi loại</option>${Object.entries(ALERT_T).map(([k, v]) => `<option value="${k}">${v[0]}</option>`).join("")}</select>
+      <select id="alD" aria-label="Khoảng ngày"><option value="1">Hôm nay</option><option value="7" selected>7 ngày</option><option value="30">30 ngày</option><option value="90">90 ngày</option></select></div></div>
+      <div class="feed" id="feed"></div></div>
+  </div>`);
+  CSV.watch = () => saveCSV("watchlist", ["shop", "nen_tang", "sp_ngach", "moi_7d", "moi_30d", "gia_12in", "gia_24in", "review", "review_7d", "sales_1d", "sales_7d", "ads_chay", "ad_lau_nhat_ngay", "quet_luc"],
+    rows.map(r => [r.s.key, r.s.plat, r.niche, r.new7, r.new30, r.p12, r.p24, r.rev, r.rev7, r.sales1, r.sales7, r.adsN, r.adLong, r.at]));
+  const st = LS.get("al", { t: "", d: "7" }); $("#alT").value = st.t; $("#alD").value = st.d;
+  const draw = () => {
+    const t = $("#alT").value, dd = +$("#alD").value; LS.set("al", { t, d: String(dd) });
+    const list = S.alerts.filter(a => (!t || a.type === t) && daysBetween(a.date, T) < dd);
+    $("#feed").innerHTML = list.length ? list.slice(0, 80).map(a => { const ty = ALERT_T[a.type] || [a.type, "info"];
+      return `<a class="al" href="${esc(a.url || "#")}" target="_blank" rel="noopener">
+        <div class="th">${a.image ? `<img loading="lazy" src="${esc(a.image)}" alt="">` : esc((a.platform || "").slice(0, 4))}</div>
+        <div style="min-width:0"><div class="m"><span class="pill ${ty[1]}">${esc(ty[0])}</span><span>${esc(a.shop)}</span><span class="mono">${fmtD(a.date)}</span>${a.sample ? '<span class="tag">sample</span>' : ""}</div>
+        <div class="t">${esc(a.title)}</div><div class="d">${esc(a.detail || "")}</div></div></a>`; }).join("")
+      : `<div class="empty"><b>Không có cảnh báo</b>trong khoảng đã chọn.</div>`;
+  };
+  $("#alT").onchange = draw; $("#alD").onchange = draw; draw();
+}
+
+/* chi tiết shop */
+function openShop(key) {
+  const s = shopOf(key); if (!s) return;
+  const r = shopRow(s);
+  const items = ITEMS.filter(i => i.shop === key).sort((a, b) => (a.rank || 1e9) - (b.rank || 1e9)).slice(0, 12);
+  const sm = s.plat === "shopify" ? S.shop[key] : S.etsy[key];
+  const link = s.plat === "shopify" ? `https://${key}` : (sm?.url || `https://www.etsy.com/shop/${key}`);
+  const info = s.plat === "etsy" && sm?.info ? sm.info : null;
+  const m = document.createElement("div"); m.className = "modal"; m.setAttribute("role", "dialog"); m.setAttribute("aria-modal", "true");
+  m.innerHTML = `<div class="box"><div class="panel-h"><div class="shopcell"><span class="dot" style="background:${s.color}"></span><h2>${esc(s.name)}</h2><span class="plat">${s.plat}</span></div>
+    <div class="filters"><button class="btn" data-goto="${esc(key)}" type="button">Xem lưới design</button><a class="btn" href="${esc(link)}" target="_blank" rel="noopener">Mở shop ↗</a><button class="btn" data-close type="button" aria-label="Đóng">Đóng</button></div></div>
+    <div class="panel-b" style="display:flex;flex-direction:column;gap:16px">
+      <div class="kpis">${(s.plat === "shopify"
+        ? [["SP ngách", fmtN(r.niche)], ["Mới 7 ngày", fmtN(r.new7)], ["Giá 12in", fmtUSD(r.p12)], ["Giá 24in", fmtUSD(r.p24)], ["Ads chạy", fmtN(r.adsN)]]
+        : [["Tổng sales", fmtN(info?.sales)], ["Sales 7 ngày", fmtSigned(r.sales7)], ["Review", fmtN(info?.reviews)], ["Rating", info?.rating ?? "—"], ["Admirers", fmtN(info?.admirers)]]
+      ).map(([l, v]) => `<div class="kpi" ${tipAttr(r.src, r.at)}><span class="l">${l}</span><span class="v">${v}</span></div>`).join("")}</div>
+      ${info ? `<div class="note">${esc(info.location || "")} · mở từ ${esc(info.since || "?")} · ${info.star_seller ? "Star Seller" : ""}</div>` : ""}
+      <div class="chart sm"><canvas id="shopChart" aria-label="Biểu đồ shop"></canvas></div>
+      <div><div class="eyebrow" style="margin-bottom:8px">Sản phẩm đầu bảng</div>
+      <div class="mgrid">${items.map(i => cardHTML(i, true)).join("") || '<div class="empty">Chưa có sản phẩm.</div>'}</div></div>
+      <div class="note">Nguồn: ${esc(r.src)} · quét ${fmtDT(r.at)}</div></div></div>`;
+  document.body.appendChild(m);
+  const close = () => { m.remove(); document.removeEventListener("keydown", onk); };
+  const onk = e => { if (e.key === "Escape") close(); };
+  document.addEventListener("keydown", onk);
+  m.addEventListener("click", e => { if (e.target === m || e.target.closest("[data-close]")) close();
+    const g = e.target.closest("[data-goto]"); if (g) { close(); DF.shop = g.dataset.goto; DF.page = 1; saveDF(); location.hash = "design"; } });
+  const ser = sm?.series || [];
+  const isE = s.plat === "etsy";
+  const vals = isE ? ser.map((x, i) => i ? x.sales - ser[i - 1].sales : null) : ser.map(x => x.n_niche ?? x.n_products);
+  const cfg = chartBase(); cfg.plugins.legend.display = false; cfg.scales.y.beginAtZero = isE;
+  mkChart($("#shopChart", m), { type: isE ? "bar" : "line", data: { labels: ser.map(x => fmtD(x.date)), datasets: [{ label: isE ? "Sales/ngày" : "SP ngách", data: vals,
+    borderColor: resolveColor(s.color), backgroundColor: resolveColor(s.color), borderWidth: 2, pointRadius: 0, tension: .25, borderRadius: 4, maxBarThickness: 18 }] }, options: cfg });
+  $("[data-close]", m).focus();
+}
+
+/* ===== 2. Sales Etsy ===== */
+function vSales(main) {
+  const shops = SHOPS.filter(s => s.plat === "etsy" && S.etsy[s.key]);
+  const mode = LS.get("salesMode", "daily");
+  const rows = shops.map(s => { const sm = S.etsy[s.key]; return { s, sm, info: sm.info || {}, d: sm.deltas || {} }; })
+    .sort((a, b) => (b.d.sales_7d ?? -1) - (a.d.sales_7d ?? -1));
+  section(`
+  <div class="ph"><div><div class="eyebrow">Màn hình 2</div><h1>Sales Etsy theo ngày</h1>
+    <p>Etsy công khai tổng số sales của shop. Lấy hiệu giữa 2 lần quét ra số đơn mỗi ngày. Không quy ra doanh thu.</p></div>
+    <span class="label-true">✓ Số thật từ Etsy</span></div>
+  ${shops.length ? `
+  <div class="panel"><div class="panel-h"><h2>${mode === "daily" ? "Sales mỗi ngày" : "Tổng sales tích luỹ"}</h2>
+    <div class="seg" role="group" aria-label="Kiểu số"><button type="button" data-sm="daily" aria-pressed="${mode === "daily"}">Sales/ngày</button><button type="button" data-sm="total" aria-pressed="${mode === "total"}">Tổng sales</button></div></div>
+    <div class="panel-b"><div class="chart"><canvas id="salesChart" aria-label="Biểu đồ sales Etsy"></canvas></div></div></div>
+  <div class="panel"><div class="panel-h"><h2>Xếp hạng theo sales 7 ngày</h2>${csvBtn("sales")}</div>
+    <div class="tw"><table><thead><tr><th>#</th><th class="sticky">Shop</th><th class="n">Tổng sales</th><th class="n">+1 ngày</th><th class="n">+7 ngày</th><th class="n">+30 ngày</th>
+      <th class="n">Review</th><th class="n">+Review 7d</th><th class="n">Rating</th><th class="n">Admirers</th><th class="n">Listing</th><th>Nơi bán</th><th>Quét lúc</th></tr></thead>
+    <tbody>${rows.map((r, i) => `<tr class="click" data-shop="${esc(r.s.key)}" tabindex="0"><td class="dim">${i + 1}</td>
+      <td class="sticky"><div class="shopcell"><span class="dot" style="background:${r.s.color}"></span><b>${esc(r.s.key)}</b>${r.info.star_seller ? '<span class="tag">Star Seller</span>' : ""}</div></td>
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtN(r.info.sales)}</td>
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtSigned(r.d.sales_1d)}</td>
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}><b>${fmtSigned(r.d.sales_7d)}</b></td>
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtSigned(r.d.sales_30d)}</td>
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtN(r.info.reviews)}</td>
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtSigned(r.d.reviews_7d)}</td>
+      <td class="n">${r.info.rating ?? "—"}</td><td class="n">${fmtN(r.info.admirers)}</td><td class="n">${fmtN(r.info.listings)}</td>
+      <td class="dim">${esc(r.info.location || "—")}</td><td class="dim mono">${fmtDT(r.sm.updated_at)}</td></tr>`).join("")}</tbody></table></div>
+    <div class="panel-b note">“+30 ngày” để trống tới khi đủ 30 ngày quét.</div></div>`
+  : `<div class="panel"><div class="empty"><b>Chưa có dữ liệu Etsy</b>Bộ thu Etsy chạy trên máy anh Hoàng lúc 6h05 sáng.</div></div>`}`);
+  if (!shops.length) return;
+  CSV.sales = () => saveCSV("sales_etsy", ["shop", "tong_sales", "sales_1d", "sales_7d", "sales_30d", "review", "review_7d", "rating", "admirers", "listing", "quet_luc"],
+    rows.map(r => [r.s.key, r.info.sales, r.d.sales_1d, r.d.sales_7d, r.d.sales_30d, r.info.reviews, r.d.reviews_7d, r.info.rating, r.info.admirers, r.info.listings, r.sm.updated_at]));
+  const dates = [...new Set(shops.flatMap(s => (S.etsy[s.key].series || []).map(x => x.date)))].sort();
+  const ds = shops.map(s => { const ser = S.etsy[s.key].series || []; const m = Object.fromEntries(ser.map(x => [x.date, x.sales]));
+    const data = dates.map((d, i) => mode === "total" ? (m[d] ?? null) : (i && m[d] != null && m[dates[i - 1]] != null ? m[d] - m[dates[i - 1]] : null));
+    const c = resolveColor(s.color);
+    return { label: s.key, data, borderColor: c, backgroundColor: c, borderWidth: 2, pointRadius: 0, pointHoverRadius: 5, tension: .25, spanGaps: true }; });
+  const cfg = chartBase();
+  cfg.plugins.tooltip.callbacks = { label: c => ` ${c.dataset.label}: ${fmtN(c.parsed.y)} ${mode === "daily" ? "sales" : "tổng"}` };
+  mkChart($("#salesChart"), { type: "line", data: { labels: dates.map(fmtD), datasets: ds }, options: cfg });
+}
+
+/* ===== 3. Lưới design ===== */
+const PAGE = 60;
+let DF = Object.assign({ q: "", theme: "", layout: "", font: "", shop: "", plat: "", pmin: "", pmax: "", sort: "rank", page: 1 }, LS.get("df", {}));
+const saveDF = () => LS.set("df", DF);
+const SORTS = { rank: "Thứ hạng bán chạy", climb: "Leo hạng 7 ngày", rev7: "Review mới 7 ngày", fav: "Favorites", new: "Ngày đăng mới nhất", pAsc: "Giá thấp → cao", pDesc: "Giá cao → thấp" };
+const THEME_VI = { dinosaur: "Khủng long", safari: "Safari", floral: "Hoa lá", space: "Vũ trụ", woodland: "Rừng", ocean: "Biển", boho: "Boho", farm: "Nông trại",
+  sports: "Thể thao", western: "Cao bồi", bunny: "Thỏ", bee: "Ong", monogram: "Monogram", christmas: "Giáng sinh", khac: "Khác" };
+const LAYOUT_VI = { "chu-cai-canh": "Chữ cái + cảnh", "canh-ten": "Cảnh + tên", "script-hoa": "Script + hoa", "ten-2-dong": "Tên 2 dòng", khac: "Khác" };
+const FONT_VI = { script: "Script", block: "Block", mixed: "Trộn", khac: "Khác" };
+const tv = (map, k) => map[k] || k;
+function cardHTML(i, compact) {
+  const s = shopOf(i.shop);
+  const img = i.image ? `<img loading="lazy" decoding="async" src="${esc(i.image)}" alt="${esc(i.title)}" referrerpolicy="no-referrer">` : "";
+  const ph = `<div class="ph-img" ${img ? "hidden" : ""}>${esc(tv(THEME_VI, i.theme))}<small>${esc(i.shop)}${i.image ? "" : " · chưa có ảnh"}</small></div>`;
+  const climb = i.rank_7d && i.rank ? i.rank_7d - i.rank : null;
+  return `<article class="card${i.mine ? " mine" : ""}">
+    <a class="im" href="${esc(i.url || "#")}" target="_blank" rel="noopener">${img}${ph}
+      <div class="badges">${i.mine ? '<span class="bd rk">Của mình</span>' : `<span class="bd rk">#${i.rank ?? "?"}</span>`}${i.bestseller ? '<span class="bd bs">Bestseller</span>' : ""}${climb > 0 && !compact ? `<span class="bd">▲${climb}</span>` : ""}</div></a>
+    <div class="ti" title="${esc(i.title)}">${esc(i.title)}</div>
+    ${compact ? "" : `<div class="row"><span class="pr" ${tipAttr(i.src, i.at)}>${i.plat === "shopify" ? "từ " : ""}${fmtUSD(i.price)}</span><span class="shopcell"><span class="dot" style="background:${s ? s.color : "var(--accent)"}"></span><span>${esc(i.shop)}</span></span></div>
+    <div class="tags">${[[THEME_VI, i.theme], [LAYOUT_VI, i.layout], [FONT_VI, i.font]].filter(x => x[1] && x[1] !== "khac").map(x => `<span class="tag">${esc(tv(x[0], x[1]))}</span>`).join("") || '<span class="tag dim">chưa phân loại</span>'}</div>
+    <div class="row"><span>Đăng ${fmtD(i.date)}</span><span>${i.plat === "etsy" ? `${fmtN(i.reviews)} review · ♥ ${fmtN(i.favorites)}` : (climb != null ? `7 ngày trước #${i.rank_7d}` : "")}</span></div>`}
+  </article>`;
+}
+function filtered() {
+  const q = DF.q.trim().toLowerCase();
+  let L = ITEMS.filter(i => (!DF.theme || i.theme === DF.theme) && (!DF.layout || i.layout === DF.layout) && (!DF.font || i.font === DF.font)
+    && (!DF.shop || i.shop === DF.shop) && (!DF.plat || i.plat === DF.plat)
+    && (DF.pmin === "" || (i.price ?? -1) >= +DF.pmin) && (DF.pmax === "" || (i.price ?? 1e9) <= +DF.pmax)
+    && (!q || i.title.toLowerCase().includes(q)));
+  const by = {
+    rank: (a, b) => (a.rank ?? 1e9) - (b.rank ?? 1e9) || (!!b.image - !!a.image) || (a.plat > b.plat ? 1 : -1),
+    climb: (a, b) => ((b.rank_7d ?? b.rank ?? 0) - (b.rank ?? 0)) - ((a.rank_7d ?? a.rank ?? 0) - (a.rank ?? 0)),
+    rev7: (a, b) => (b.reviews_7d ?? -1) - (a.reviews_7d ?? -1), fav: (a, b) => (b.favorites ?? -1) - (a.favorites ?? -1),
+    new: (a, b) => String(b.date || "").localeCompare(String(a.date || "")),
+    pAsc: (a, b) => (a.price ?? 1e9) - (b.price ?? 1e9), pDesc: (a, b) => (b.price ?? -1) - (a.price ?? -1) }[DF.sort] || (() => 0);
+  return L.sort(by);
+}
+function mineItems() {
+  const m = S.mine; if (!m) return null;
+  const arr = Array.isArray(m) ? m : (m.items || m.products || []);
+  return arr.map((p, k) => ({ mine: true, plat: "mine", shop: "Little Nest", id: "mine:" + k, title: p.title || p.name || "Mẫu " + (k + 1), image: p.thumb || p.image || "",
+    url: p.url || "", price: p.price ?? p.price_min ?? null, theme: p.theme || "khac", layout: p.layout || "khac", font: p.font || "khac", rank: k + 1 }));
+}
+function vDesign(main) {
+  const opts = (key, map) => { const c = {}; ITEMS.forEach(i => c[i[key]] = (c[i[key]] || 0) + 1);
+    return Object.entries(c).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<option value="${esc(k)}">${esc(tv(map, k))} (${n})</option>`).join(""); };
+  const themeCount = {}; ITEMS.forEach(i => themeCount[i.theme] = (themeCount[i.theme] || 0) + 1);
+  section(`
+  <div class="ph"><div><div class="eyebrow">Màn hình 3</div><h1>Lưới design theo theme</h1>
+    <p>Sản phẩm Shopify và listing Etsy của mọi shop trên cùng một lưới. Lọc theo theme để xem đối thủ làm gì, so với mẫu của mình.</p></div>${csvBtn("design")}</div>
+  <div class="chips" id="themeChips" role="group" aria-label="Theme">
+    <button type="button" class="chip" data-th="" aria-pressed="${!DF.theme}">Tất cả<b>${ITEMS.length}</b></button>
+    ${Object.entries(themeCount).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<button type="button" class="chip" data-th="${esc(k)}" aria-pressed="${DF.theme === k}">${esc(tv(THEME_VI, k))}<b>${n}</b></button>`).join("")}
+  </div>
+  <div class="filters" id="dfil">
+    <label class="wide">Tìm trong tên<input type="search" id="f-q" placeholder="vd: butterfly, monogram"></label>
+    <label>Layout<select id="f-layout"><option value="">Tất cả</option>${opts("layout", LAYOUT_VI)}</select></label>
+    <label>Font<select id="f-font"><option value="">Tất cả</option>${opts("font", FONT_VI)}</select></label>
+    <label>Shop<select id="f-shop"><option value="">Tất cả</option>${SHOPS.map(s => `<option value="${esc(s.key)}">${esc(s.key)}</option>`).join("")}</select></label>
+    <label>Nền tảng<select id="f-plat"><option value="">Tất cả</option><option value="shopify">Shopify</option><option value="etsy">Etsy</option></select></label>
+    <label>Giá từ $<input type="number" id="f-pmin" min="0" step="1" inputmode="decimal"></label>
+    <label>đến $<input type="number" id="f-pmax" min="0" step="1" inputmode="decimal"></label>
+    <label>Sắp xếp<select id="f-sort">${Object.entries(SORTS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>
+    <button class="btn" id="f-reset" type="button" style="align-self:flex-end">Bỏ lọc</button>
+  </div>
+  <div class="panel" id="minePanel"></div>
+  <div class="note" id="gcount"></div>
+  <div class="grid" id="grid"></div>
+  <nav class="pager" id="pager" aria-label="Trang"></nav>`);
+  ["q", "layout", "font", "shop", "plat", "pmin", "pmax", "sort"].forEach(k => { const el = $("#f-" + k); el.value = DF[k];
+    el.addEventListener(el.tagName === "INPUT" ? "input" : "change", () => { DF[k] = el.value; DF.page = 1; saveDF(); drawGrid(); }); });
+  $("#f-reset").onclick = () => { DF = { q: "", theme: "", layout: "", font: "", shop: "", plat: "", pmin: "", pmax: "", sort: "rank", page: 1 }; saveDF(); render(); };
+  $("#themeChips").onclick = e => { const b = e.target.closest("[data-th]"); if (!b) return; DF.theme = b.dataset.th; DF.page = 1; saveDF();
+    document.querySelectorAll("#themeChips .chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.th === DF.theme)); drawGrid(); };
+  CSV.design = () => { const L = filtered(); saveCSV("design", ["nen_tang", "shop", "rank", "rank_7d", "tieu_de", "gia_usd", "ngay_dang", "theme", "layout", "font", "review", "review_7d", "favorites", "bestseller", "url", "anh"],
+    L.map(i => [i.plat, i.shop, i.rank, i.rank_7d, i.title, i.price, i.date, i.theme, i.layout, i.font, i.reviews, i.reviews_7d, i.favorites, i.bestseller ? 1 : 0, i.url, i.image])); };
+  drawGrid();
+}
+function drawGrid() {
+  const L = filtered(); const pages = Math.max(1, Math.ceil(L.length / PAGE)); DF.page = Math.min(Math.max(1, DF.page), pages);
+  const slice = L.slice((DF.page - 1) * PAGE, DF.page * PAGE);
+  $("#gcount").textContent = `${fmtN(L.length)} mẫu khớp · trang ${DF.page}/${pages} · ${PAGE} mẫu/trang`;
+  $("#grid").innerHTML = slice.length ? slice.map(i => cardHTML(i)).join("") : `<div class="empty" style="grid-column:1/-1"><b>Không có mẫu nào khớp bộ lọc</b>Thử bỏ bớt điều kiện hoặc bấm “Bỏ lọc”.</div>`;
+  // pager
+  const btn = (p, label, cur) => `<button class="btn" type="button" data-pg="${p}" ${cur ? 'aria-current="true"' : ""}>${label}</button>`;
+  let h = ""; if (pages > 1) {
+    h += DF.page > 1 ? btn(DF.page - 1, "‹ Trước") : "";
+    const set = new Set([1, pages, DF.page - 1, DF.page, DF.page + 1].filter(p => p >= 1 && p <= pages)); let prev = 0;
+    [...set].sort((a, b) => a - b).forEach(p => { if (p - prev > 1) h += `<span class="dim">…</span>`; h += btn(p, p, p === DF.page); prev = p; });
+    h += DF.page < pages ? btn(DF.page + 1, "Sau ›") : "";
+  }
+  $("#pager").innerHTML = h;
+  $("#pager").onclick = e => { const b = e.target.closest("[data-pg]"); if (!b) return; DF.page = +b.dataset.pg; saveDF(); drawGrid(); $("#gcount").scrollIntoView({ block: "start", behavior: "smooth" }); };
+  // mẫu của mình
+  const mine = mineItems(); const mp = $("#minePanel");
+  if (!mine) mp.innerHTML = `<div class="panel-h"><h2>Mẫu của mình</h2><span class="note">Chưa có <span class="mono">data/mine.json</span>. Thêm file này (16 mẫu Little Nest: title, image, price, theme, layout, font) để so cạnh đối thủ.</span></div>`;
+  else { const sub = mine.filter(m => !DF.theme || m.theme === DF.theme);
+    mp.innerHTML = `<div class="panel-h"><h2>Mẫu của mình${DF.theme ? " · " + esc(tv(THEME_VI, DF.theme)) : ""}</h2><span class="note">${sub.length}/${mine.length} mẫu Little Nest</span></div>
+      <div class="panel-b">${sub.length ? `<div class="mine-strip">${sub.map(m => cardHTML(m, true)).join("")}</div>` : `<span class="note">Mình chưa có mẫu theme này, đối thủ có ${L.length}.</span>`}</div>`; }
+}
+
+/* ===== 4. Bảng giá ===== */
+const SIZE_COLS = ["8", "10", "12", "14", "16", "18", "20", "24", "26", "30"];
+function vPrice(main) {
+  const T = S.today, T7 = addDays(T, -7);
+  const rows = SHOPS.filter(s => s.plat === "shopify" && S.shop[s.key]).map(s => { const sm = S.shop[s.key];
+    const now = seriesAt(sm.series, T) || {}; const old = seriesAt(sm.series, T7) || {};
+    let pbs = now.price_by_size;
+    if (!pbs || !Object.keys(pbs).length) { const acc = {}; (sm.products || []).forEach(p => Object.entries(p.price_by_size || {}).forEach(([k, v]) => (acc[k] = acc[k] || []).push(v)));
+      pbs = Object.fromEntries(Object.entries(acc).map(([k, v]) => [k, median(v)])); }
+    return { s, sm, pbs: pbs || {}, old: old.date && old.date < (now.date || T) ? (old.price_by_size || {}) : {}, oldDate: old.date }; });
+  const cols = SIZE_COLS.filter(c => rows.some(r => r.pbs[c] != null));
+  const etsyRows = SHOPS.filter(s => s.plat === "etsy" && S.etsy[s.key]).map(s => { const ls = S.etsy[s.key].listings || [];
+    return { s, med: median(ls.map(l => l.price)), min: Math.min(...ls.map(l => l.price ?? 1e9)), n: ls.length, sm: S.etsy[s.key] }; });
+  section(`
+  <div class="ph"><div><div class="eyebrow">Màn hình 4</div><h1>Bảng giá theo size</h1>
+    <p>Giá trung vị theo khổ inch (từ tên variant), so với 7 ngày trước (${fmtD(T7)}). Ô tô màu là khổ vừa đổi giá.</p></div>
+    <div class="legend"><span><span class="chg up mono">▲ $</span> tăng</span><span><span class="chg down mono">▼ $</span> giảm</span></div></div>
+  ${rows.length ? `
+  <div class="panel"><div class="panel-h"><h2>Shopify · giá trung vị ($)</h2>${csvBtn("price")}</div>
+    <div class="tw"><table><thead><tr><th class="sticky">Shop</th>${cols.map(c => `<th class="n">${c} in</th>`).join("")}<th class="n">$/in @12</th><th class="n">$/in @24</th><th class="n">Free ship từ</th></tr></thead>
+    <tbody>${rows.map(r => `<tr class="click" data-shop="${esc(r.s.key)}" tabindex="0"><td class="sticky"><div class="shopcell"><span class="dot" style="background:${r.s.color}"></span><b>${esc(r.s.name)}</b></div></td>
+      ${cols.map(c => { const v = r.pbs[c], o = r.old[c]; const dlt = v != null && o != null ? +(v - o).toFixed(2) : 0;
+        return `<td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${dlt ? `<span class="chg ${dlt > 0 ? "up" : "down"}" title="7 ngày trước ${fmtUSD(o)}">${dlt > 0 ? "▲" : "▼"} ${fmtUSD(v)}</span>` : fmtUSD(v)}</td>`; }).join("")}
+      <td class="n">${r.pbs["12"] ? fmtUSD(r.pbs["12"] / 12) : "—"}</td><td class="n">${r.pbs["24"] ? fmtUSD(r.pbs["24"] / 24) : "—"}</td>
+      <td class="n dim" data-tip="Chưa lấy được ngưỡng free-ship từ store" tabindex="0">${r.sm.free_ship_threshold ? fmtUSD(r.sm.free_ship_threshold) : "—"}</td></tr>`).join("")}</tbody></table></div></div>
+  <div class="panel"><div class="panel-h"><h2>Đường giá theo khổ</h2><span class="note">trục X = inch, trục Y = $ trung vị</span></div>
+    <div class="panel-b"><div class="chart"><canvas id="priceChart" aria-label="Đường giá theo khổ"></canvas></div></div></div>`
+  : `<div class="panel"><div class="empty"><b>Chưa có dữ liệu giá Shopify</b></div></div>`}
+  ${etsyRows.length ? `<div class="panel"><div class="panel-h"><h2>Etsy · giá listing</h2><span class="note">Etsy chưa tách giá theo size, chỉ có giá hiển thị (đã quy USD)</span></div>
+    <div class="tw"><table><thead><tr><th class="sticky">Shop</th><th class="n">Số listing</th><th class="n">Giá trung vị</th><th class="n">Thấp nhất</th></tr></thead>
+    <tbody>${etsyRows.map(r => `<tr><td class="sticky"><div class="shopcell"><span class="dot" style="background:${r.s.color}"></span><b>${esc(r.s.key)}</b></div></td><td class="n">${r.n}</td>
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtUSD(r.med)}</td><td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${r.min < 1e9 ? fmtUSD(r.min) : "—"}</td></tr>`).join("")}</tbody></table></div></div>` : ""}`);
+  if (!rows.length) return;
+  CSV.price = () => saveCSV("gia_theo_size", ["shop", ...cols.map(c => c + "in"), ...cols.map(c => c + "in_7d_truoc"), "usd_per_in_12", "usd_per_in_24"],
+    rows.map(r => [r.s.key, ...cols.map(c => r.pbs[c]), ...cols.map(c => r.old[c]), r.pbs["12"] ? (r.pbs["12"] / 12).toFixed(2) : "", r.pbs["24"] ? (r.pbs["24"] / 24).toFixed(2) : ""]));
+  const cfg = chartBase(); cfg.interaction = { mode: "nearest", intersect: false };
+  cfg.scales.x = { ...cfg.scales.x, type: "linear", min: 6, max: 32, ticks: { ...cfg.scales.x.ticks, stepSize: 2, callback: v => v + "in" } };
+  cfg.scales.y.ticks.callback = v => "$" + v; cfg.scales.y.beginAtZero = true;
+  cfg.plugins.tooltip.callbacks = { title: c => c[0].parsed.x + " in", label: c => ` ${c.dataset.label}: ${fmtUSD(c.parsed.y)}` };
+  mkChart($("#priceChart"), { type: "line", data: { datasets: rows.map(r => { const c = resolveColor(r.s.color);
+    return { label: r.s.name, data: Object.entries(r.pbs).map(([k, v]) => ({ x: +k, y: v })).sort((a, b) => a.x - b.x), borderColor: c, backgroundColor: c, borderWidth: 2, pointRadius: 4, pointHoverRadius: 6, pointBorderColor: cssv("--surface"), pointBorderWidth: 2 }; }) }, options: cfg });
+}
+
+/* ===== 5. Ads board ===== */
+let AF = Object.assign({ win: "all", long: false, group: "shop" }, LS.get("af", {}));
+function vAds(main) {
+  const T = S.today;
+  const all = Object.entries(S.ads).flatMap(([key, sm]) => (sm.ads || []).map(a => {
+    const prod = (S.shop[key]?.products || []).find(p => p.handle && p.handle === a.product_handle);
+    return { ...a, key, sm, prod, theme: a.theme || prod?.theme || "khac" }; }));
+  section(`
+  <div class="ph"><div><div class="eyebrow">Màn hình 5</div><h1>Ads board</h1>
+    <p>Quảng cáo Facebook/Instagram từ Meta Ad Library. Ad chạy quá 14 ngày thường là ad có lời, đáng xem kỹ.</p></div>${csvBtn("ads")}</div>
+  ${all.length ? `
+  <div class="filters">
+    <div class="seg" role="group" aria-label="Bắt đầu trong">${[["all", "Tất cả"], ["3", "3 ngày"], ["7", "7 ngày"], ["15", "15 ngày"], ["30", "30 ngày"]].map(([k, l]) => `<button type="button" data-win="${k}" aria-pressed="${AF.win === k}">${l}</button>`).join("")}</div>
+    <div class="seg" role="group"><button type="button" id="aLong" aria-pressed="${AF.long}">Chạy &gt; 14 ngày</button></div>
+    <div class="seg" role="group" aria-label="Nhóm theo">${[["shop", "Theo shop"], ["theme", "Theo theme"]].map(([k, l]) => `<button type="button" data-grp="${k}" aria-pressed="${AF.group === k}">${l}</button>`).join("")}</div>
+    <span class="note" id="adCount"></span>
+  </div>
+  <div class="tw panel"><table><thead><tr><th class="sticky">Trang</th><th class="n">Đang chạy</th><th class="n">Mới 7 ngày</th><th class="n">Chạy &gt; 14 ngày</th><th class="n">Lâu nhất</th><th>Quét lúc</th></tr></thead>
+    <tbody>${Object.entries(S.ads).map(([key, sm]) => { const act = (sm.ads || []).filter(a => a.active);
+      return `<tr><td class="sticky"><div class="shopcell"><span class="dot" style="background:${colorOf(key)}"></span><b>${esc(key)}</b></div></td>
+      <td class="n" ${tipAttr(sm.source, sm.updated_at)}>${act.length}</td><td class="n">${act.filter(a => daysBetween(a.first_seen, T) < 7).length}</td>
+      <td class="n">${act.filter(a => a.days_running > 14).length}</td><td class="n">${act.length ? Math.max(...act.map(a => a.days_running || 0)) + " ngày" : "—"}</td><td class="dim mono">${fmtDT(sm.updated_at)}</td></tr>`; }).join("")}</tbody></table></div>
+  <div id="adBoard" style="display:flex;flex-direction:column;gap:16px"></div>`
+  : `<div class="panel"><div class="empty"><b>Chưa có dữ liệu ads</b>Bộ thu Meta Ad Library chạy trên máy anh Hoàng.</div></div>`}`);
+  if (!all.length) return;
+  const vis = () => all.filter(a => (AF.win === "all" || daysBetween(a.first_seen, T) < +AF.win) && (!AF.long || a.days_running > 14)).sort((a, b) => b.days_running - a.days_running);
+  CSV.ads = () => saveCSV("ads", ["trang", "library_id", "bat_dau", "lan_cuoi", "so_ngay", "dang_chay", "theme", "noi_dung", "trang_dich", "nen_tang"],
+    vis().map(a => [a.key, a.library_id, a.first_seen, a.last_seen, a.days_running, a.active ? 1 : 0, a.theme, a.text, a.landing, (a.platforms || []).join("|")]));
+  const draw = () => {
+    const L = vis(); $("#adCount").textContent = `${L.length} ad`;
+    const groups = {}; L.forEach(a => { const g = AF.group === "shop" ? a.key : a.theme; (groups[g] = groups[g] || []).push(a); });
+    $("#adBoard").innerHTML = L.length ? Object.entries(groups).sort((a, b) => b[1].length - a[1].length).map(([g, arr]) => `<section class="grp">
+      <h3>${AF.group === "shop" ? `<span class="dot" style="background:${colorOf(g)}"></span>${esc(g)}` : esc(tv(THEME_VI, g))}<span class="note">${arr.length} ad</span></h3>
+      <div class="adgrid">${arr.map(a => { const long = a.days_running > 14;
+        return `<article class="ad"><div class="top"><div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;gap:4px;flex-wrap:wrap">${a.active ? '<span class="pill good">● Đang chạy</span>' : '<span class="pill">Đã dừng</span>'}${long ? '<span class="pill serious">▲ &gt; 14 ngày</span>' : ""}</div>
+          <span class="note">Bắt đầu ${fmtD(a.first_seen)} · thấy lần cuối ${fmtD(a.last_seen)}</span></div>
+          <div class="days" ${tipAttr(a.sm.source, a.sm.updated_at)}>${a.days_running}<small>ngày</small></div></div>
+          <div class="txt">${esc(a.text || "(không có chữ)")}</div>
+          <a class="dest" href="${esc(a.landing || "#")}" target="_blank" rel="noopener">${a.prod?.image ? `<img loading="lazy" src="${esc(a.prod.image)}" alt="">` : '<span class="ph"></span>'}
+            <span>${esc(a.prod?.title || a.product_handle || a.landing || "—")}</span></a>
+          <div class="note">${esc((a.platforms || []).join(" · "))} · ID ${esc(a.library_id)}${AF.group === "theme" ? " · " + esc(a.key) : ""}</div></article>`; }).join("")}</div></section>`).join("")
+      : `<div class="panel"><div class="empty"><b>Không có ad nào khớp</b>Thử khoảng ngày rộng hơn hoặc tắt “Chạy &gt; 14 ngày”.</div></div>`;
+  };
+  document.querySelectorAll("[data-win]").forEach(b => b.onclick = () => { AF.win = b.dataset.win; LS.set("af", AF); document.querySelectorAll("[data-win]").forEach(x => x.setAttribute("aria-pressed", x === b)); draw(); });
+  document.querySelectorAll("[data-grp]").forEach(b => b.onclick = () => { AF.group = b.dataset.grp; LS.set("af", AF); document.querySelectorAll("[data-grp]").forEach(x => x.setAttribute("aria-pressed", x === b)); draw(); });
+  $("#aLong").onclick = () => { AF.long = !AF.long; LS.set("af", AF); $("#aLong").setAttribute("aria-pressed", AF.long); draw(); };
+  draw();
+}
+
+/* ===== 6. Review ===== */
+function vReview(main) {
+  const shops = SHOPS.filter(s => s.plat === "etsy" && S.etsy[s.key]);
+  const top = Object.entries(S.etsy).flatMap(([shop, sm]) => (sm.listings || []).map(l => ({ ...l, shop, sm }))).filter(l => l.reviews_7d != null)
+    .sort((a, b) => b.reviews_7d - a.reviews_7d).slice(0, 15);
+  section(`
+  <div class="ph"><div><div class="eyebrow">Màn hình 6 · bản đầu</div><h1>Review</h1>
+    <p>Số review mới mỗi ngày của từng shop Etsy, lấy từ tổng review công khai. Nội dung review sẽ bổ sung ở bản sau.</p></div></div>
+  ${shops.length ? `<div class="panel"><div class="panel-h"><h2>Review mới mỗi ngày</h2><span class="label-true">✓ Số thật từ Etsy</span></div>
+    <div class="panel-b"><div class="chart sm"><canvas id="revChart" aria-label="Review mới mỗi ngày"></canvas></div></div></div>
+  <div class="two">
+    <div class="panel"><div class="panel-h"><h2>Listing nhiều review mới 7 ngày</h2>${csvBtn("rev")}</div>
+      <div class="tw"><table><thead><tr><th></th><th>Listing</th><th>Shop</th><th class="n">+7d</th><th class="n">Tổng</th></tr></thead>
+      <tbody>${top.map(l => `<tr><td style="width:44px">${l.image ? `<img loading="lazy" src="${esc(l.image)}" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:4px;display:block">` : ""}</td>
+        <td style="white-space:normal;min-width:200px"><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.title.slice(0, 70))}${l.title.length > 70 ? "…" : ""}</a></td>
+        <td class="dim">${esc(l.shop)}</td><td class="n" ${tipAttr(l.sm.source, l.sm.updated_at)}><b>${fmtSigned(l.reviews_7d)}</b></td><td class="n">${fmtN(l.reviews)}</td></tr>`).join("") || `<tr><td colspan="5" class="empty">Chưa có số review theo listing.</td></tr>`}</tbody></table></div></div>
+    <div class="panel"><div class="panel-h"><h2>Nội dung review</h2><span class="pill info">Sắp có</span></div>
+      <div class="panel-b" style="display:flex;flex-direction:column;gap:10px;color:var(--ink-2)">
+        <p style="margin:0">Snapshot hiện chỉ có số review và tên người mua, chưa có chữ. Khi bộ thu lấy thêm text, mục này sẽ hiện:</p>
+        <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px"><li>Từ hay gặp: khen (màu, gỗ dày, giao nhanh) và chê (sai chính tả, cong vênh, lâu)</li>
+        <li>Review 1–3 sao mới nhất của từng shop</li><li>Theme/sản phẩm được khen nhiều nhất</li></ul>
+        <p class="note" style="margin:0">Dữ liệu dự kiến: <span class="mono">etsy/&lt;shop&gt;/summary.json → reviews_text[]</span></p></div></div>
+  </div>` : `<div class="panel"><div class="empty"><b>Chưa có dữ liệu Etsy</b></div></div>`}`);
+  if (!shops.length) return;
+  CSV.rev = () => saveCSV("review_listing", ["shop", "listing", "review_7d", "review_tong", "url"], top.map(l => [l.shop, l.title, l.reviews_7d, l.reviews, l.url]));
+  const dates = [...new Set(shops.flatMap(s => (S.etsy[s.key].series || []).map(x => x.date)))].sort().slice(1);
+  const cfg = chartBase(); cfg.scales.y.beginAtZero = true; cfg.scales.y.ticks.precision = 0;
+  mkChart($("#revChart"), { type: "bar", data: { labels: dates.map(fmtD), datasets: shops.map(s => { const ser = S.etsy[s.key].series || []; const m = Object.fromEntries(ser.map(x => [x.date, x.reviews]));
+    const c = resolveColor(s.color);
+    return { label: s.key, data: dates.map(d => { const p = addDays(d, -1); return m[d] != null && m[p] != null ? m[d] - m[p] : null; }), backgroundColor: c, borderColor: cssv("--surface"), borderWidth: { left: 1, right: 1 }, borderRadius: 4, maxBarThickness: 14, borderSkipped: "start" }; }) }, options: cfg });
+}
+
+/* ===== 7. Lịch mùa vụ ===== */
+const SEASON_VI = { christmas: "Giáng sinh", halloween: "Halloween", easter: "Phục sinh", valentine: "Valentine", "back-to-school": "Tựu trường" };
+const weekStart = iso => { const t = new Date(iso + "T00:00:00Z"); const dw = (t.getUTCDay() + 6) % 7; t.setUTCDate(t.getUTCDate() - dw); return t.toISOString().slice(0, 10); };
+function vSeason(main) {
+  const T = S.today;
+  const NW = 16; const lastW = weekStart(T); const weeks = []; for (let i = NW - 1; i >= 0; i--) weeks.push(addDays(lastW, -7 * i));
+  const inX = w => { const y = w.slice(0, 4); const a = `${y}-08-15`, b = `${y}-09-15`; return addDays(w, 6) >= a && w <= b; };
+  const rows = SHOPS.map(s => { const its = ITEMS.filter(i => i.shop === s.key && i.date);
+    const cells = weeks.map(w => { const xs = its.filter(i => weekStart(i.date) === w); return { n: xs.length, season: [...new Set(xs.flatMap(i => i.season || []))] }; });
+    return { s, cells, total: its.length }; }).filter(r => r.total);
+  const mx = Math.max(1, ...rows.flatMap(r => r.cells.map(c => c.n)));
+  const seasonal = ITEMS.filter(i => (i.season || []).length).sort((a, b) => String(b.date || "0").localeCompare(String(a.date || "0")));
+  section(`
+  <div class="ph"><div><div class="eyebrow">Màn hình 7</div><h1>Lịch mùa vụ</h1>
+    <p>Số sản phẩm mỗi shop đăng theo tuần (${NW} tuần gần nhất, tính theo ngày đăng). Chấm đỏ = tuần có hàng theo mùa. Cột tô đỏ nhạt = khung 15/8–15/9, nên đăng hàng Noel.</p></div>${csvBtn("season")}</div>
+  ${rows.length ? `<div class="panel"><div class="panel-b">
+    <div class="tw"><table class="hm"><thead><tr><th class="sh">Tuần bắt đầu</th>${weeks.map(w => `<th class="${inX(w) ? "xmas" : ""}" title="${inX(w) ? "Khung đăng hàng Noel" : ""}">${fmtD(w)}</th>`).join("")}<th class="sh" style="padding-left:10px">Tổng</th></tr></thead>
+    <tbody>${rows.map(r => `<tr><th class="sh"><span class="shopcell"><span class="dot" style="background:${r.s.color}"></span>${esc(r.s.key)}</span></th>
+      ${r.cells.map((c, k) => c.n ? `<td style="background:color-mix(in oklab,var(--seq) ${Math.round(32 + 63 * c.n / mx)}%,var(--surface));color:${c.n / mx > .45 ? "#fff" : "var(--ink)"}" data-tip="${esc(`${r.s.key} · tuần ${fmtD(weeks[k])}: ${c.n} sản phẩm${c.season.length ? " · mùa: " + c.season.map(x => SEASON_VI[x] || x).join(", ") : ""}`)}" tabindex="0">${c.n}${c.season.length ? '<span class="sz"></span>' : ""}</td>` : `<td class="z">0</td>`).join("")}
+      <td class="mono" style="padding-left:10px;text-align:left">${r.total}</td></tr>`).join("")}</tbody></table></div>
+    <div class="legend" style="margin-top:12px"><span>Ít</span>${[.15, .35, .6, .9].map(p => `<span class="sw" style="background:color-mix(in oklab,var(--seq) ${Math.round(32 + 63 * p)}%,var(--surface))"></span>`).join("")}<span>Nhiều (tối đa ${mx}/tuần)</span>
+      <span><span class="sw" style="background:var(--crit);border-radius:50%;width:8px;height:8px"></span> có hàng mùa</span>
+      <span><span class="sw" style="background:color-mix(in oklab,var(--crit) 18%,transparent)"></span> 15/8–15/9 đăng hàng Noel</span></div>
+    <p class="note" style="margin:10px 0 0">Ngày đăng Shopify = published_at (shop có thể đăng lại để đẩy lên). Etsy = listed_on (Etsy làm mới khi gia hạn listing).</p></div></div>
+  <div class="panel"><div class="panel-h"><h2>Sản phẩm theo mùa</h2><span class="note">${seasonal.length} mẫu gắn tag mùa</span></div>
+    <div class="tw"><table><thead><tr><th>Ngày đăng</th><th>Mùa</th><th>Shop</th><th>Sản phẩm</th><th class="n">Giá</th></tr></thead>
+    <tbody>${seasonal.slice(0, 40).map(i => `<tr><td class="mono">${fmtD(i.date)}</td><td>${i.season.map(x => `<span class="tag">${esc(SEASON_VI[x] || x)}</span>`).join(" ")}</td>
+      <td class="dim">${esc(i.shop)}</td><td style="white-space:normal;min-width:220px"><a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.title)}</a></td><td class="n">${fmtUSD(i.price)}</td></tr>`).join("") || `<tr><td colspan="5" class="empty">Chưa có sản phẩm gắn tag mùa.</td></tr>`}</tbody></table></div></div>`
+  : `<div class="panel"><div class="empty"><b>Chưa có ngày đăng sản phẩm</b></div></div>`}`);
+  const hw = document.querySelector(".hm")?.parentElement; if (hw) hw.scrollLeft = hw.scrollWidth;
+  CSV.season = () => saveCSV("lich_mua_vu", ["shop", ...weeks], rows.map(r => [r.s.key, ...r.cells.map(c => c.n)]));
+}
+
+/* ===== Tương tác chung ===== */
+const tip = $("#tip");
+function showTip(el) { const t = el.getAttribute("data-tip"); if (!t) return; tip.textContent = t; tip.classList.add("on");
+  const r = el.getBoundingClientRect(); const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8); let y = r.top - h - 8; if (y < 8) y = r.bottom + 8;
+  tip.style.left = x + "px"; tip.style.top = y + "px"; }
+const hideTip = () => tip.classList.remove("on");
+document.addEventListener("mouseover", e => { const el = e.target.closest("[data-tip]"); el ? showTip(el) : hideTip(); });
+document.addEventListener("focusin", e => { const el = e.target.closest("[data-tip]"); el ? showTip(el) : hideTip(); });
+addEventListener("scroll", hideTip, { passive: true });
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-csv]"); if (c && CSV[c.dataset.csv]) { CSV[c.dataset.csv](); return; }
+  const sm = e.target.closest("[data-sm]"); if (sm) { LS.set("salesMode", sm.dataset.sm); render(); return; }
+  const tr = e.target.closest("tr[data-shop]"); if (tr && !e.target.closest("a")) { openShop(tr.dataset.shop); return; }
+  const tp = e.target.closest("[data-tip]"); if (tp && matchMedia("(hover: none)").matches) showTip(tp);
+});
+document.addEventListener("keydown", e => { if (e.key === "Enter") { const tr = e.target.closest?.("tr[data-shop]"); if (tr) openShop(tr.dataset.shop); } });
+document.addEventListener("error", e => { const t = e.target; if (t && t.tagName === "IMG") { const ph = t.parentElement?.querySelector(".ph-img"); if (ph) { ph.hidden = false; t.remove(); } else t.style.visibility = "hidden"; } }, true);
+addEventListener("hashchange", () => { render(); scrollTo(0, 0); });
+let rerenderT; const rerender = () => { clearTimeout(rerenderT); rerenderT = setTimeout(() => { if (CHARTS.length) render(); }, 60); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", rerender);
+new MutationObserver(rerender).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+(async function boot() {
+  const md = $("#mode"); md.classList.toggle("live", DATA_MODE === "remote"); md.querySelector("span").textContent = DATA_MODE === "remote" ? "Dữ liệu trực tiếp" : "Dữ liệu SAMPLE";
+  await loadAll();
+  buildModel(); ITEMS = designItems();
+  $("#upd").textContent = S.idx ? "Cập nhật " + fmtDT(S.idx.updated_at) + " (giờ VN)" : "Chưa có dữ liệu";
+  render();
+})();
+</script>
+
+</body>
+</html>
