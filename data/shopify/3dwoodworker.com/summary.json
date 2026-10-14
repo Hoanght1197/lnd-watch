@@ -1,7 +1,7 @@
 {
  "domain": "3dwoodworker.com",
  "name": "3D Woodworker",
- "updated_at": "2026-10-14T08:12:28Z",
+ "updated_at": "2026-10-14T08:23:56Z",
  "source": "products.json + collections/all?sort_by=best-selling",
  "last_ok": "2026-10-14",
  "series": [

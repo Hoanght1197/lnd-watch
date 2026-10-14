@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-14T08:15:24Z",
+ "updated_at": "2026-10-14T08:25:36Z",
  "shopify": [
   {
    "domain": "3dwoodworker.com",
@@ -58,17 +58,17 @@
  ],
  "etsy": [
   {
-   "shop": "grossbale",
-   "last_ok": "2026-10-14",
-   "sales": 4963,
-   "reviews": 632,
-   "sales_7d": null
-  },
-  {
    "shop": "StayNaturalStore",
    "last_ok": "2026-10-14",
    "sales": 3479,
    "reviews": 516,
+   "sales_7d": null
+  },
+  {
+   "shop": "grossbale",
+   "last_ok": "2026-10-14",
+   "sales": 4963,
+   "reviews": 632,
    "sales_7d": null
   }
  ],

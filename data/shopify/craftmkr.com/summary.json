@@ -1,7 +1,7 @@
 {
  "domain": "craftmkr.com",
  "name": "Craftmkr",
- "updated_at": "2026-10-14T08:08:03Z",
+ "updated_at": "2026-10-14T08:24:29Z",
  "source": "products.json + collections/all?sort_by=best-selling",
  "last_ok": "2026-10-14",
  "series": [
