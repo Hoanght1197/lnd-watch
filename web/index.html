@@ -291,6 +291,9 @@ async function loadAll() {
   S.today = (idx.dates && idx.dates[idx.dates.length - 1]) || (idx.updated_at || "").slice(0, 10) || new Date().toISOString().slice(0, 10);
 }
 
+/* Giá listing Etsy: chỉ in $ khi là USD thật, còn lại dùng price_usd (bộ thu quy đổi) */
+const etsyUSD = l => (l.currency || "USD") === "USD" ? (l.price ?? null) : (l.price_usd ?? null);
+const etsyConv = l => (l.currency || "USD") !== "USD";
 /* ===== Mô hình chung ===== */
 let SHOPS = []; // [{key, plat, name, color}]
 function buildModel() {
@@ -317,12 +320,12 @@ function designItems() {
   const out = [];
   for (const [dom, sm] of Object.entries(S.shop)) (sm.products || []).forEach(p => out.push({
     plat: "shopify", shop: dom, id: dom + ":" + p.handle, title: p.title, image: p.thumb || p.image, url: p.url, price: p.price_min,
-    date: p.published_at, rank: p.rank, rank_7d: p.rank_7d, reviews: null, reviews_7d: null, favorites: null, favorites_7d: null,
-    bestseller: false, theme: p.theme || "khac", layout: p.layout || "khac", font: p.font || "khac", season: p.season || [], src: sm.source, at: sm.updated_at, handle: p.handle }));
+    date: p.published_at, first_seen: p.first_seen, rank: p.rank, rank_7d: p.rank_7d, reviews: null, reviews_7d: null, favorites: null, favorites_7d: null,
+    bestseller: false, theme: p.theme || "khac", layout: p.layout || "khac", font: p.font || "khac", season: p.season || [], src: sm.source, at: sm.updated_at, handle: p.handle, niche: p.is_niche !== false }));
   for (const [shop, sm] of Object.entries(S.etsy)) (sm.listings || []).forEach((l, i) => out.push({
-    plat: "etsy", shop, id: shop + ":" + l.id, title: l.title, image: l.thumb || l.image, url: l.url, price: l.price,
+    plat: "etsy", shop, id: shop + ":" + l.id, title: l.title, image: l.thumb || l.image, url: l.url, price: etsyUSD(l), conv: etsyConv(l), cur: l.currency || "USD", price_orig: l.price,
     date: l.listed_on, rank: i + 1, rank_7d: null, reviews: l.reviews, reviews_7d: l.reviews_7d, favorites: l.favorites, favorites_7d: l.favorites_7d,
-    bestseller: !!l.bestseller, theme: l.theme || "khac", layout: l.layout || "khac", font: l.font || "khac", season: l.season || [], src: sm.source, at: sm.updated_at }));
+    bestseller: !!l.bestseller, theme: l.theme || "khac", layout: l.layout || "khac", font: l.font || "khac", season: l.season || [], src: sm.source, at: sm.updated_at, niche: l.is_niche !== false }));
   return out;
 }
 let ITEMS = [];
@@ -410,6 +413,7 @@ const ALERT_T = {
   new_product: ["SP mới", "info"], price_change: ["Đổi giá", "warn"], rank_jump: ["Leo hạng", "good"], new_ad: ["Ad mới", "info"],
   ad_long: ["Ad chạy lâu", "serious"], etsy_sales_spike: ["Sales tăng vọt", "good"], new_listing: ["Listing mới", "info"],
   lost_bestseller: ["Mất Bestseller", "crit"], new_theme: ["Theme mới", "serious"] };
+const adIdx = key => (S.idx?.ads || []).find(a => a.key === key);
 function shopRow(s) {
   const T = S.today;
   if (s.plat === "shopify") {
@@ -417,9 +421,9 @@ function shopRow(s) {
     const prods = sm?.products || [];
     const new30 = prods.filter(p => p.published_at && daysBetween(p.published_at, T) <= 30).length;
     const ads = S.ads[s.key]; const act = (ads?.ads || []).filter(a => a.active);
-    return { s, niche: last.n_niche ?? s.meta.n_products, new7: last.n_new_7d, new30: prods.length ? new30 : null,
+    return { s, niche: last.n_niche ?? s.meta.n_niche ?? s.meta.n_products, new7: last.n_new_7d ?? s.meta.n_new_7d, new30: prods.length ? new30 : null,
       p12: last.price_by_size?.["12"], p24: last.price_by_size?.["24"], rev: null, rev7: null, sales1: null, sales7: null,
-      adsN: ads ? act.length : null, adLong: act.length ? Math.max(...act.map(a => a.days_running || 0)) : null,
+      adsN: ads ? act.length : (adIdx(s.key)?.n_active ?? null), adLong: act.length ? Math.max(...act.map(a => a.days_running || 0)) : (adIdx(s.key)?.max_days_running ?? null),
       at: sm?.updated_at || s.meta.last_ok, src: sm?.source || "chưa có summary", adsrc: ads?.source, adat: ads?.updated_at,
       spark: ser.map(r => r.n_niche ?? r.n_products), sparkL: "SP ngách 14 ngày" };
   }
@@ -429,7 +433,7 @@ function shopRow(s) {
   const new30 = ls.filter(l => l.listed_on && daysBetween(l.listed_on, T) <= 30).length;
   const daily = ser.map((r, i) => i ? r.sales - ser[i - 1].sales : null).slice(1);
   return { s, niche: sm?.info?.listings ?? null, new7: ls.length ? new7 : null, new30: ls.length ? new30 : null, p12: null, p24: null,
-    rev: sm?.info?.reviews ?? null, rev7: sm?.deltas?.reviews_7d ?? null, sales1: sm?.deltas?.sales_1d ?? null, sales7: sm?.deltas?.sales_7d ?? null,
+    rev: sm?.info?.reviews ?? null, rev7: sm?.deltas?.reviews_7d ?? null, sales1: sm?.deltas?.sales_1d ?? null, sales7: sm?.deltas?.sales_7d ?? s.meta.sales_7d ?? null,
     adsN: null, adLong: null, at: sm?.updated_at || s.meta.last_ok, src: sm?.source || "chưa có summary", spark: daily, sparkL: "Sales/ngày" };
 }
 function vOverview(main) {
@@ -549,7 +553,7 @@ function vSales(main) {
       <td class="sticky"><div class="shopcell"><span class="dot" style="background:${r.s.color}"></span><b>${esc(r.s.key)}</b>${r.info.star_seller ? '<span class="tag">Star Seller</span>' : ""}</div></td>
       <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtN(r.info.sales)}</td>
       <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtSigned(r.d.sales_1d)}</td>
-      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}><b>${fmtSigned(r.d.sales_7d)}</b></td>
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}><b>${fmtSigned(r.d.sales_7d ?? r.s.meta.sales_7d)}</b></td>
       <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtSigned(r.d.sales_30d)}</td>
       <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtN(r.info.reviews)}</td>
       <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtSigned(r.d.reviews_7d)}</td>
@@ -572,14 +576,15 @@ function vSales(main) {
 
 /* ===== 3. Lưới design ===== */
 const PAGE = 60;
-let DF = Object.assign({ q: "", theme: "", layout: "", font: "", shop: "", plat: "", pmin: "", pmax: "", sort: "rank", page: 1 }, LS.get("df", {}));
+let DF = Object.assign({ q: "", theme: "", layout: "", font: "", shop: "", plat: "", pmin: "", pmax: "", sort: "rank", page: 1, niche: true }, LS.get("df", {}));
 const saveDF = () => LS.set("df", DF);
 const SORTS = { rank: "Thứ hạng bán chạy", climb: "Leo hạng 7 ngày", rev7: "Review mới 7 ngày", fav: "Favorites", new: "Ngày đăng mới nhất", pAsc: "Giá thấp → cao", pDesc: "Giá cao → thấp" };
 const THEME_VI = { dinosaur: "Khủng long", safari: "Safari", floral: "Hoa lá", space: "Vũ trụ", woodland: "Rừng", ocean: "Biển", boho: "Boho", farm: "Nông trại",
   sports: "Thể thao", western: "Cao bồi", bunny: "Thỏ", bee: "Ong", monogram: "Monogram", christmas: "Giáng sinh", khac: "Khác" };
 const LAYOUT_VI = { "chu-cai-canh": "Chữ cái + cảnh", "canh-ten": "Cảnh + tên", "script-hoa": "Script + hoa", "ten-2-dong": "Tên 2 dòng", khac: "Khác" };
 const FONT_VI = { script: "Script", block: "Block", mixed: "Trộn", khac: "Khác" };
-const tv = (map, k) => map[k] || k;
+const tvFull = (map, k) => (S.themes?.labels || {})[k] || map[k] || k;
+const tv = (map, k) => tvFull(map, k).replace(/\s*\(.*\)\s*$/, "");
 function cardHTML(i, compact) {
   const s = shopOf(i.shop);
   const img = i.image ? `<img loading="lazy" decoding="async" src="${esc(i.image)}" alt="${esc(i.title)}" referrerpolicy="no-referrer">` : "";
@@ -589,14 +594,14 @@ function cardHTML(i, compact) {
     <a class="im" href="${esc(i.url || "#")}" target="_blank" rel="noopener">${img}${ph}
       <div class="badges">${i.mine ? '<span class="bd rk">Của mình</span>' : `<span class="bd rk">#${i.rank ?? "?"}</span>`}${i.bestseller ? '<span class="bd bs">Bestseller</span>' : ""}${climb > 0 && !compact ? `<span class="bd">▲${climb}</span>` : ""}</div></a>
     <div class="ti" title="${esc(i.title)}">${esc(i.title)}</div>
-    ${compact ? "" : `<div class="row"><span class="pr" ${tipAttr(i.src, i.at)}>${i.plat === "shopify" ? "từ " : ""}${fmtUSD(i.price)}</span><span class="shopcell"><span class="dot" style="background:${s ? s.color : "var(--accent)"}"></span><span>${esc(i.shop)}</span></span></div>
+    ${compact ? "" : `<div class="row"><span class="pr" ${i.conv ? `data-tip="${esc(`Quy đổi từ ${fmtN(i.price_orig)} ${i.cur} · nguồn: ${i.src} · quét: ${fmtDT(i.at)}`)}" tabindex="0"` : tipAttr(i.src, i.at)}>${i.plat === "shopify" ? "từ " : ""}${i.conv && i.price != null ? "≈" : ""}${fmtUSD(i.price)}${i.conv && i.price != null ? '<small class="note" style="font-family:var(--f-body);font-weight:400"> quy đổi</small>' : ""}</span><span class="shopcell"><span class="dot" style="background:${s ? s.color : "var(--accent)"}"></span><span>${esc(i.shop)}</span></span></div>
     <div class="tags">${[[THEME_VI, i.theme], [LAYOUT_VI, i.layout], [FONT_VI, i.font]].filter(x => x[1] && x[1] !== "khac").map(x => `<span class="tag">${esc(tv(x[0], x[1]))}</span>`).join("") || '<span class="tag dim">chưa phân loại</span>'}</div>
-    <div class="row"><span>Đăng ${fmtD(i.date)}</span><span>${i.plat === "etsy" ? `${fmtN(i.reviews)} review · ♥ ${fmtN(i.favorites)}` : (climb != null ? `7 ngày trước #${i.rank_7d}` : "")}</span></div>`}
+    <div class="row"><span title="${i.first_seen ? "Bộ thu thấy lần đầu " + fmtD(i.first_seen) : ""}">Đăng ${fmtD(i.date)}</span><span>${i.plat === "etsy" ? `${fmtN(i.reviews)} review · ♥ ${fmtN(i.favorites)}` : (climb != null ? `7 ngày trước #${i.rank_7d}` : "")}</span></div>`}
   </article>`;
 }
 function filtered() {
   const q = DF.q.trim().toLowerCase();
-  let L = ITEMS.filter(i => (!DF.theme || i.theme === DF.theme) && (!DF.layout || i.layout === DF.layout) && (!DF.font || i.font === DF.font)
+  let L = ITEMS.filter(i => (!DF.niche || i.niche) && (!DF.theme || i.theme === DF.theme) && (!DF.layout || i.layout === DF.layout) && (!DF.font || i.font === DF.font)
     && (!DF.shop || i.shop === DF.shop) && (!DF.plat || i.plat === DF.plat)
     && (DF.pmin === "" || (i.price ?? -1) >= +DF.pmin) && (DF.pmax === "" || (i.price ?? 1e9) <= +DF.pmax)
     && (!q || i.title.toLowerCase().includes(q)));
@@ -616,14 +621,14 @@ function mineItems() {
 }
 function vDesign(main) {
   const opts = (key, map) => { const c = {}; ITEMS.forEach(i => c[i[key]] = (c[i[key]] || 0) + 1);
-    return Object.entries(c).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<option value="${esc(k)}">${esc(tv(map, k))} (${n})</option>`).join(""); };
+    return Object.entries(c).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<option value="${esc(k)}">${esc(tvFull(map, k))} (${n})</option>`).join(""); };
   const themeCount = {}; ITEMS.forEach(i => themeCount[i.theme] = (themeCount[i.theme] || 0) + 1);
   section(`
   <div class="ph"><div><div class="eyebrow">Màn hình 3</div><h1>Lưới design theo theme</h1>
     <p>Sản phẩm Shopify và listing Etsy của mọi shop trên cùng một lưới. Lọc theo theme để xem đối thủ làm gì, so với mẫu của mình.</p></div>${csvBtn("design")}</div>
   <div class="chips" id="themeChips" role="group" aria-label="Theme">
     <button type="button" class="chip" data-th="" aria-pressed="${!DF.theme}">Tất cả<b>${ITEMS.length}</b></button>
-    ${Object.entries(themeCount).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<button type="button" class="chip" data-th="${esc(k)}" aria-pressed="${DF.theme === k}">${esc(tv(THEME_VI, k))}<b>${n}</b></button>`).join("")}
+    ${Object.entries(themeCount).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<button type="button" class="chip" data-th="${esc(k)}" aria-pressed="${DF.theme === k}" title="${esc(tvFull(THEME_VI, k))}">${esc(tv(THEME_VI, k))}<b>${n}</b></button>`).join("")}
   </div>
   <div class="filters" id="dfil">
     <label class="wide">Tìm trong tên<input type="search" id="f-q" placeholder="vd: butterfly, monogram"></label>
@@ -634,6 +639,7 @@ function vDesign(main) {
     <label>Giá từ $<input type="number" id="f-pmin" min="0" step="1" inputmode="decimal"></label>
     <label>đến $<input type="number" id="f-pmax" min="0" step="1" inputmode="decimal"></label>
     <label>Sắp xếp<select id="f-sort">${Object.entries(SORTS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>
+    <label style="flex-direction:row;align-items:center;gap:6px;align-self:flex-end;padding-bottom:7px;font-size:13px;color:var(--ink-2)"><input type="checkbox" id="f-niche"> Chỉ SP bảng tên (ngách)</label>
     <button class="btn" id="f-reset" type="button" style="align-self:flex-end">Bỏ lọc</button>
   </div>
   <div class="panel" id="minePanel"></div>
@@ -642,11 +648,12 @@ function vDesign(main) {
   <nav class="pager" id="pager" aria-label="Trang"></nav>`);
   ["q", "layout", "font", "shop", "plat", "pmin", "pmax", "sort"].forEach(k => { const el = $("#f-" + k); el.value = DF[k];
     el.addEventListener(el.tagName === "INPUT" ? "input" : "change", () => { DF[k] = el.value; DF.page = 1; saveDF(); drawGrid(); }); });
-  $("#f-reset").onclick = () => { DF = { q: "", theme: "", layout: "", font: "", shop: "", plat: "", pmin: "", pmax: "", sort: "rank", page: 1 }; saveDF(); render(); };
+  $("#f-niche").checked = !!DF.niche; $("#f-niche").onchange = e => { DF.niche = e.target.checked; DF.page = 1; saveDF(); drawGrid(); };
+  $("#f-reset").onclick = () => { DF = { q: "", theme: "", layout: "", font: "", shop: "", plat: "", pmin: "", pmax: "", sort: "rank", page: 1, niche: true }; saveDF(); render(); };
   $("#themeChips").onclick = e => { const b = e.target.closest("[data-th]"); if (!b) return; DF.theme = b.dataset.th; DF.page = 1; saveDF();
     document.querySelectorAll("#themeChips .chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.th === DF.theme)); drawGrid(); };
-  CSV.design = () => { const L = filtered(); saveCSV("design", ["nen_tang", "shop", "rank", "rank_7d", "tieu_de", "gia_usd", "ngay_dang", "theme", "layout", "font", "review", "review_7d", "favorites", "bestseller", "url", "anh"],
-    L.map(i => [i.plat, i.shop, i.rank, i.rank_7d, i.title, i.price, i.date, i.theme, i.layout, i.font, i.reviews, i.reviews_7d, i.favorites, i.bestseller ? 1 : 0, i.url, i.image])); };
+  CSV.design = () => { const L = filtered(); saveCSV("design", ["nen_tang", "shop", "rank", "rank_7d", "tieu_de", "gia_usd", "quy_doi", "gia_goc", "tien_te_goc", "ngay_dang", "thay_lan_dau", "theme", "layout", "font", "review", "review_7d", "favorites", "bestseller", "url", "anh"],
+    L.map(i => [i.plat, i.shop, i.rank, i.rank_7d, i.title, i.price, i.conv ? 1 : 0, i.conv ? i.price_orig : i.price, i.cur || "USD", i.date, i.first_seen || "", i.theme, i.layout, i.font, i.reviews, i.reviews_7d, i.favorites, i.bestseller ? 1 : 0, i.url, i.image])); };
   drawGrid();
 }
 function drawGrid() {
@@ -673,7 +680,7 @@ function drawGrid() {
 }
 
 /* ===== 4. Bảng giá ===== */
-const SIZE_COLS = ["8", "10", "12", "14", "16", "18", "20", "24", "26", "30"];
+const SIZE_COLS = ["4", "5", "6", "8", "10", "12", "14", "16", "18", "20", "24", "26", "30", "36"];
 function vPrice(main) {
   const T = S.today, T7 = addDays(T, -7);
   const rows = SHOPS.filter(s => s.plat === "shopify" && S.shop[s.key]).map(s => { const sm = S.shop[s.key];
@@ -682,12 +689,12 @@ function vPrice(main) {
     if (!pbs || !Object.keys(pbs).length) { const acc = {}; (sm.products || []).forEach(p => Object.entries(p.price_by_size || {}).forEach(([k, v]) => (acc[k] = acc[k] || []).push(v)));
       pbs = Object.fromEntries(Object.entries(acc).map(([k, v]) => [k, median(v)])); }
     return { s, sm, pbs: pbs || {}, old: old.date && old.date < (now.date || T) ? (old.price_by_size || {}) : {}, oldDate: old.date }; });
-  const cols = SIZE_COLS.filter(c => rows.some(r => r.pbs[c] != null));
+  const cols = SIZE_COLS.filter(c => rows.some(r => r.pbs[c] != null)); // khổ lẻ (9.25in, 11.5in…) bỏ qua, có trong CSV gốc
   const etsyRows = SHOPS.filter(s => s.plat === "etsy" && S.etsy[s.key]).map(s => { const ls = S.etsy[s.key].listings || [];
-    return { s, med: median(ls.map(l => l.price)), min: Math.min(...ls.map(l => l.price ?? 1e9)), n: ls.length, sm: S.etsy[s.key] }; });
+    const ps = ls.map(etsyUSD).filter(v => v != null); return { s, med: median(ps), min: ps.length ? Math.min(...ps) : 1e9, n: ls.length, conv: ls.some(etsyConv), cur: [...new Set(ls.filter(etsyConv).map(l => l.currency))].join(", "), sm: S.etsy[s.key] }; });
   section(`
   <div class="ph"><div><div class="eyebrow">Màn hình 4</div><h1>Bảng giá theo size</h1>
-    <p>Giá trung vị theo khổ inch (từ tên variant), so với 7 ngày trước (${fmtD(T7)}). Ô tô màu là khổ vừa đổi giá.</p></div>
+    <p>Giá trung vị theo khổ inch chuẩn (từ tên variant, bỏ khổ lẻ như 9.25in), so với 7 ngày trước (${fmtD(T7)}). Ô tô màu là khổ vừa đổi giá.</p></div>
     <div class="legend"><span><span class="chg up mono">▲ $</span> tăng</span><span><span class="chg down mono">▼ $</span> giảm</span></div></div>
   ${rows.length ? `
   <div class="panel"><div class="panel-h"><h2>Shopify · giá trung vị ($)</h2>${csvBtn("price")}</div>
@@ -700,19 +707,19 @@ function vPrice(main) {
   <div class="panel"><div class="panel-h"><h2>Đường giá theo khổ</h2><span class="note">trục X = inch, trục Y = $ trung vị</span></div>
     <div class="panel-b"><div class="chart"><canvas id="priceChart" aria-label="Đường giá theo khổ"></canvas></div></div></div>`
   : `<div class="panel"><div class="empty"><b>Chưa có dữ liệu giá Shopify</b></div></div>`}
-  ${etsyRows.length ? `<div class="panel"><div class="panel-h"><h2>Etsy · giá listing</h2><span class="note">Etsy chưa tách giá theo size, chỉ có giá hiển thị (đã quy USD)</span></div>
-    <div class="tw"><table><thead><tr><th class="sticky">Shop</th><th class="n">Số listing</th><th class="n">Giá trung vị</th><th class="n">Thấp nhất</th></tr></thead>
+  ${etsyRows.length ? `<div class="panel"><div class="panel-h"><h2>Etsy · giá listing</h2><span class="note">Etsy chưa tách giá theo size, chỉ có giá hiển thị. Dòng ghi “quy đổi” là giá đã đổi sang USD từ tiền tệ gốc.</span></div>
+    <div class="tw"><table><thead><tr><th class="sticky">Shop</th><th class="n">Số listing</th><th class="n">Giá trung vị</th><th class="n">Thấp nhất</th><th>Tiền tệ gốc</th></tr></thead>
     <tbody>${etsyRows.map(r => `<tr><td class="sticky"><div class="shopcell"><span class="dot" style="background:${r.s.color}"></span><b>${esc(r.s.key)}</b></div></td><td class="n">${r.n}</td>
-      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtUSD(r.med)}</td><td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${r.min < 1e9 ? fmtUSD(r.min) : "—"}</td></tr>`).join("")}</tbody></table></div></div>` : ""}`);
+      <td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${fmtUSD(r.med)}</td><td class="n" ${tipAttr(r.sm.source, r.sm.updated_at)}>${r.min < 1e9 ? fmtUSD(r.min) : "—"}</td><td class="dim">${r.conv ? esc(r.cur) + " · quy đổi" : "USD"}</td></tr>`).join("")}</tbody></table></div></div>` : ""}`);
   if (!rows.length) return;
   CSV.price = () => saveCSV("gia_theo_size", ["shop", ...cols.map(c => c + "in"), ...cols.map(c => c + "in_7d_truoc"), "usd_per_in_12", "usd_per_in_24"],
     rows.map(r => [r.s.key, ...cols.map(c => r.pbs[c]), ...cols.map(c => r.old[c]), r.pbs["12"] ? (r.pbs["12"] / 12).toFixed(2) : "", r.pbs["24"] ? (r.pbs["24"] / 24).toFixed(2) : ""]));
   const cfg = chartBase(); cfg.interaction = { mode: "nearest", intersect: false };
-  cfg.scales.x = { ...cfg.scales.x, type: "linear", min: 6, max: 32, ticks: { ...cfg.scales.x.ticks, stepSize: 2, callback: v => v + "in" } };
+  cfg.scales.x = { ...cfg.scales.x, type: "linear", min: Math.max(0, Math.min(...cols.map(Number)) - 2), max: Math.max(...cols.map(Number)) + 2, ticks: { ...cfg.scales.x.ticks, stepSize: 2, callback: v => v + "in" } };
   cfg.scales.y.ticks.callback = v => "$" + v; cfg.scales.y.beginAtZero = true;
   cfg.plugins.tooltip.callbacks = { title: c => c[0].parsed.x + " in", label: c => ` ${c.dataset.label}: ${fmtUSD(c.parsed.y)}` };
   mkChart($("#priceChart"), { type: "line", data: { datasets: rows.map(r => { const c = resolveColor(r.s.color);
-    return { label: r.s.name, data: Object.entries(r.pbs).map(([k, v]) => ({ x: +k, y: v })).sort((a, b) => a.x - b.x), borderColor: c, backgroundColor: c, borderWidth: 2, pointRadius: 4, pointHoverRadius: 6, pointBorderColor: cssv("--surface"), pointBorderWidth: 2 }; }) }, options: cfg });
+    return { label: r.s.name, data: Object.entries(r.pbs).filter(([k]) => cols.includes(k)).map(([k, v]) => ({ x: +k, y: v })).sort((a, b) => a.x - b.x), borderColor: c, backgroundColor: c, borderWidth: 2, pointRadius: 4, pointHoverRadius: 6, pointBorderColor: cssv("--surface"), pointBorderWidth: 2 }; }) }, options: cfg });
 }
 
 /* ===== 5. Ads board ===== */
@@ -721,7 +728,7 @@ function vAds(main) {
   const T = S.today;
   const all = Object.entries(S.ads).flatMap(([key, sm]) => (sm.ads || []).map(a => {
     const prod = (S.shop[key]?.products || []).find(p => p.handle && p.handle === a.product_handle);
-    return { ...a, key, sm, prod, theme: a.theme || prod?.theme || "khac" }; }));
+    return { ...a, start: a.start_date || a.first_seen, key, sm, prod, theme: a.theme || prod?.theme || "khac" }; }));
   section(`
   <div class="ph"><div><div class="eyebrow">Màn hình 5</div><h1>Ads board</h1>
     <p>Quảng cáo Facebook/Instagram từ Meta Ad Library. Ad chạy quá 14 ngày thường là ad có lời, đáng xem kỹ.</p></div>${csvBtn("ads")}</div>
@@ -735,28 +742,28 @@ function vAds(main) {
   <div class="tw panel"><table><thead><tr><th class="sticky">Trang</th><th class="n">Đang chạy</th><th class="n">Mới 7 ngày</th><th class="n">Chạy &gt; 14 ngày</th><th class="n">Lâu nhất</th><th>Quét lúc</th></tr></thead>
     <tbody>${Object.entries(S.ads).map(([key, sm]) => { const act = (sm.ads || []).filter(a => a.active);
       return `<tr><td class="sticky"><div class="shopcell"><span class="dot" style="background:${colorOf(key)}"></span><b>${esc(key)}</b></div></td>
-      <td class="n" ${tipAttr(sm.source, sm.updated_at)}>${act.length}</td><td class="n">${act.filter(a => daysBetween(a.first_seen, T) < 7).length}</td>
+      <td class="n" ${tipAttr(sm.source, sm.updated_at)}>${act.length}</td><td class="n">${act.filter(a => daysBetween(a.start_date || a.first_seen, T) < 7).length}</td>
       <td class="n">${act.filter(a => a.days_running > 14).length}</td><td class="n">${act.length ? Math.max(...act.map(a => a.days_running || 0)) + " ngày" : "—"}</td><td class="dim mono">${fmtDT(sm.updated_at)}</td></tr>`; }).join("")}</tbody></table></div>
   <div id="adBoard" style="display:flex;flex-direction:column;gap:16px"></div>`
   : `<div class="panel"><div class="empty"><b>Chưa có dữ liệu ads</b>Bộ thu Meta Ad Library chạy trên máy anh Hoàng.</div></div>`}`);
   if (!all.length) return;
-  const vis = () => all.filter(a => (AF.win === "all" || daysBetween(a.first_seen, T) < +AF.win) && (!AF.long || a.days_running > 14)).sort((a, b) => b.days_running - a.days_running);
-  CSV.ads = () => saveCSV("ads", ["trang", "library_id", "bat_dau", "lan_cuoi", "so_ngay", "dang_chay", "theme", "noi_dung", "trang_dich", "nen_tang"],
-    vis().map(a => [a.key, a.library_id, a.first_seen, a.last_seen, a.days_running, a.active ? 1 : 0, a.theme, a.text, a.landing, (a.platforms || []).join("|")]));
+  const vis = () => all.filter(a => (AF.win === "all" || daysBetween(a.start, T) < +AF.win) && (!AF.long || a.days_running > 14)).sort((a, b) => b.days_running - a.days_running);
+  CSV.ads = () => saveCSV("ads", ["trang", "page_name", "library_id", "bat_dau", "lan_cuoi", "so_ngay", "dang_chay", "theme", "noi_dung", "trang_dich", "nen_tang"],
+    vis().map(a => [a.key, a.page_name || "", a.library_id, a.start, a.last_seen, a.days_running, a.active ? 1 : 0, a.theme, a.text, a.landing, (a.platforms || []).join("|")]));
   const draw = () => {
     const L = vis(); $("#adCount").textContent = `${L.length} ad`;
     const groups = {}; L.forEach(a => { const g = AF.group === "shop" ? a.key : a.theme; (groups[g] = groups[g] || []).push(a); });
     $("#adBoard").innerHTML = L.length ? Object.entries(groups).sort((a, b) => b[1].length - a[1].length).map(([g, arr]) => `<section class="grp">
-      <h3>${AF.group === "shop" ? `<span class="dot" style="background:${colorOf(g)}"></span>${esc(g)}` : esc(tv(THEME_VI, g))}<span class="note">${arr.length} ad</span></h3>
+      <h3>${AF.group === "shop" ? `<span class="dot" style="background:${colorOf(g)}"></span>${esc(g)}${arr[0].page_name ? ` <span class="note">· trang ${esc(arr[0].page_name)}</span>` : ""}` : esc(tv(THEME_VI, g))}<span class="note">${arr.length} ad</span></h3>
       <div class="adgrid">${arr.map(a => { const long = a.days_running > 14;
         return `<article class="ad"><div class="top"><div style="display:flex;flex-direction:column;gap:4px">
           <div style="display:flex;gap:4px;flex-wrap:wrap">${a.active ? '<span class="pill good">● Đang chạy</span>' : '<span class="pill">Đã dừng</span>'}${long ? '<span class="pill serious">▲ &gt; 14 ngày</span>' : ""}</div>
-          <span class="note">Bắt đầu ${fmtD(a.first_seen)} · thấy lần cuối ${fmtD(a.last_seen)}</span></div>
+          <span class="note">Bắt đầu ${fmtD(a.start)} · thấy lần cuối ${fmtD(a.last_seen)}</span></div>
           <div class="days" ${tipAttr(a.sm.source, a.sm.updated_at)}>${a.days_running}<small>ngày</small></div></div>
           <div class="txt">${esc(a.text || "(không có chữ)")}</div>
-          <a class="dest" href="${esc(a.landing || "#")}" target="_blank" rel="noopener">${a.prod?.image ? `<img loading="lazy" src="${esc(a.prod.image)}" alt="">` : '<span class="ph"></span>'}
+          <a class="dest" href="${esc(a.landing || "#")}" target="_blank" rel="noopener">${a.prod?.image || a.image ? `<img loading="lazy" src="${esc(a.prod?.image || a.image)}" alt="">` : '<span class="ph"></span>'}
             <span>${esc(a.prod?.title || a.product_handle || a.landing || "—")}</span></a>
-          <div class="note">${esc((a.platforms || []).join(" · "))} · ID ${esc(a.library_id)}${AF.group === "theme" ? " · " + esc(a.key) : ""}</div></article>`; }).join("")}</div></section>`).join("")
+          <div class="note">${(a.platforms || []).length ? esc(a.platforms.join(" · ")) + " · " : ""}${a.page_name ? esc(a.page_name) + " · " : ""}ID ${esc(a.library_id)}${AF.group === "theme" ? " · " + esc(a.key) : ""}</div></article>`; }).join("")}</div></section>`).join("")
       : `<div class="panel"><div class="empty"><b>Không có ad nào khớp</b>Thử khoảng ngày rộng hơn hoặc tắt “Chạy &gt; 14 ngày”.</div></div>`;
   };
   document.querySelectorAll("[data-win]").forEach(b => b.onclick = () => { AF.win = b.dataset.win; LS.set("af", AF); document.querySelectorAll("[data-win]").forEach(x => x.setAttribute("aria-pressed", x === b)); draw(); });
@@ -824,7 +831,7 @@ function vSeason(main) {
   <div class="panel"><div class="panel-h"><h2>Sản phẩm theo mùa</h2><span class="note">${seasonal.length} mẫu gắn tag mùa</span></div>
     <div class="tw"><table><thead><tr><th>Ngày đăng</th><th>Mùa</th><th>Shop</th><th>Sản phẩm</th><th class="n">Giá</th></tr></thead>
     <tbody>${seasonal.slice(0, 40).map(i => `<tr><td class="mono">${fmtD(i.date)}</td><td>${i.season.map(x => `<span class="tag">${esc(SEASON_VI[x] || x)}</span>`).join(" ")}</td>
-      <td class="dim">${esc(i.shop)}</td><td style="white-space:normal;min-width:220px"><a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.title)}</a></td><td class="n">${fmtUSD(i.price)}</td></tr>`).join("") || `<tr><td colspan="5" class="empty">Chưa có sản phẩm gắn tag mùa.</td></tr>`}</tbody></table></div></div>`
+      <td class="dim">${esc(i.shop)}</td><td style="white-space:normal;min-width:220px"><a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.title)}</a></td><td class="n">${i.conv && i.price != null ? "≈" : ""}${fmtUSD(i.price)}${i.conv ? ' <span class="note">quy đổi</span>' : ""}</td></tr>`).join("") || `<tr><td colspan="5" class="empty">Chưa có sản phẩm gắn tag mùa.</td></tr>`}</tbody></table></div></div>`
   : `<div class="panel"><div class="empty"><b>Chưa có ngày đăng sản phẩm</b></div></div>`}`);
   const hw = document.querySelector(".hm")?.parentElement; if (hw) hw.scrollLeft = hw.scrollWidth;
   CSV.season = () => saveCSV("lich_mua_vu", ["shop", ...weeks], rows.map(r => [r.s.key, ...r.cells.map(c => c.n)]));
